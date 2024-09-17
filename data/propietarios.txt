@@ -1,0 +1,5 @@
+123456789 Ivan_Nunez Ivan123 1 2 203
+234567890 Luis_Guevara Guevara123 1 1 105
+345678901 Luis_Brenis Brenis123 1 3 304
+456789012 Diego_Espinoza Diego123 1 5 503
+567890123 Juan_Vazquez Juan123 1 2 207
