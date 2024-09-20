@@ -1,6 +1,9 @@
 #include <iostream>
 #include <cstdlib>
-#include <login.hpp>
+#include "..\include\login.hpp"
+#include "..\include\edificio.hpp"
+#include "..\include\nivel.hpp"
+#include "..\include\departamento.hpp"
 
 using namespace std;
 

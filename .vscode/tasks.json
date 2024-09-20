@@ -12,6 +12,9 @@
                 "${workspaceFolder}/src/login.cpp",
                 "${workspaceFolder}/src/usuario.cpp",
                 "${workspaceFolder}/src/usuario_Apartamento.cpp",  // Añade usuario_Apartamento.cpp
+                "${workspaceFolder}/src/edificio.cpp",
+                "${workspaceFolder}/src/nivel.cpp",
+                "${workspaceFolder}/src/departamento.cpp",
                 "${workspaceFolder}/src/administrador.cpp",        // Añade administrador.cpp
                 "${workspaceFolder}/src/mantenimiento.cpp",        // Añade mantenimiento.cpp
                 "-o",

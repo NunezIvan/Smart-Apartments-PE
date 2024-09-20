@@ -3,7 +3,9 @@
 #include <iostream>
 #include <fstream>   
 #include <stdlib.h>
-#include <usuario.hpp>
+#include "usuario.hpp"
+#include <vector>
+#include "departamento.hpp"
 
 class Nivel {
 private:
@@ -12,7 +14,7 @@ private:
 public:
     Nivel(int _numero, int _Num_Departamentos); 
     ~Nivel();
-    int getNumero() const
-    const vector<Departamento>& getDepartamentos() const
-}
+    int getNumero();
+    const vector<Departamento>& getDepartamentos();
+};
 #endif

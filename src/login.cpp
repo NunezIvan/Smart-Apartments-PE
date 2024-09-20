@@ -136,7 +136,7 @@ void inicio_SesionMantenimiento() {
     archivo.close();
 }
 
-// Función principal para seleccionar tipo de usuario
+
 void inicio_Sesion() {
     int opcion;
 
