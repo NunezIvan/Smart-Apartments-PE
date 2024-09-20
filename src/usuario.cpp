@@ -10,7 +10,7 @@ int generate_ID() {
 Usuario::Usuario(string _nom_Usuario, string _contr_Usuario) {
     nom_Usuario = _nom_Usuario;
     contr_Usuario = _contr_Usuario;
-    id_Usuario = generate_ID();  // Generar ID
+    id_Usuario = generate_ID(); 
 }
 
 string Usuario::getNom_Usuario() const {
