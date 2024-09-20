@@ -7,6 +7,7 @@ using namespace std;
 int main() {
     fflush(stdin);
     int opcion;
+
     do {
         cout << "=====================================" << endl;
         cout << "          BIENVENIDO AL SISTEMA     " << endl;
@@ -17,6 +18,7 @@ int main() {
         cout << "\n"<<endl;
         cout << "Seleccione una opción: ";
         cin >> opcion;
+
         switch (opcion) {
             case 1:
             fflush(stdin);

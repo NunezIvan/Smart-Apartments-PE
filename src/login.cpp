@@ -27,7 +27,7 @@ void inicio_SesionPropietario() {
     getline(cin, contrasena_ingresada);
 
     // Abrimos el archivo de propietarios desde la carpeta data
-    ifstream archivo("C:/Users/USER/Desktop/ESTRUCTURA PROYECTO/data/propietarios.txt");
+    ifstream archivo("D:/Smart-Apartments-PE/data/propietarios.txt");
     if (!archivo.is_open()) {
         cout << "Error al abrir el archivo de propietarios." << endl;
         return;
@@ -69,7 +69,7 @@ void inicio_SesionAdministrador() {
     getline(cin, contrasena_ingresada);
 
     // Abrimos el archivo de administradores desde la carpeta data
-    ifstream archivo("C:/Users/USER/Desktop/ESTRUCTURA PROYECTO/data/administradores.txt");
+    ifstream archivo("D:/Smart-Apartments-PE/data/administradores.txt");
     if (!archivo.is_open()) {
         cout << "Error al abrir el archivo de administradores." << endl;
         return;
@@ -110,7 +110,7 @@ void inicio_SesionMantenimiento() {
     getline(cin, contrasena_ingresada);
 
     // Abrimos el archivo de mantenimiento desde la carpeta data
-    ifstream archivo("C:/Users/USER/Desktop/ESTRUCTURA PROYECTO/data/mantenimiento.txt");
+    ifstream archivo("D:/Smart-Apartments-PE/data/mantenimiento.txt");
     if (!archivo.is_open()) {
         cout << "Error al abrir el archivo de mantenimiento." << endl;
         return;
@@ -147,7 +147,7 @@ void inicio_Sesion() {
     cout << "3. Mantenimiento" << endl;
     cout << "Ingrese su opción: ";
     cin >> opcion;
-    limpiarBuffer();  // Limpiar el búfer después de leer la opción
+    limpiarBuffer(); 
 
     switch (opcion) {
         case 1:
