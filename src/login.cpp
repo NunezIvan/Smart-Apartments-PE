@@ -1,12 +1,11 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <login.hpp>
 #include <limits>
 
 using namespace std;
 
-// Función para limpiar el búfer de entrada
+
 void limpiarBuffer() {
     cin.clear();
     cin.ignore(numeric_limits<streamsize>::max(), '\n');

@@ -1,8 +1,12 @@
 #include <iostream>
 #include <fstream>   
 #include <stdlib.h>
-#include <usuario.hpp>
-#include <mantenimiento.hpp>
+#include "usuario.cpp"
+
+class mantenimiento_Cond : public Usuario {
+public:
+    mantenimiento_Cond(string _nom_Usuario, string _contr_Usuario);
+};
 
 mantenimiento_Cond::mantenimiento_Cond(string _nom_Usuario, string _contr_Usuario):Usuario(_nom_Usuario, _contr_Usuario) {
     setRol_Usuario("Mantenimiento");

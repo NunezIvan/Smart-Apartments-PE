@@ -1,9 +1,19 @@
 #include <iostream>
-#include <fstream>   // Asegúrate de incluir fstream aquí
+#include <fstream>
 #include <stdlib.h>
-#include <usuario.hpp>
-#include <usuario_Apartamento.hpp>
+#include "usuario.cpp"
+
 using namespace std;
+class propietario_Apartamento : public Usuario {
+private:
+    int nivel_Edificio, num_Apartamento, num_Edificio;
+
+public:
+    propietario_Apartamento(string _nom_Usuario, string _contr_Usuario, int _num_Edificio, int _nivel_Edificio, int _num_Apartamento);
+    int getnum_Edificio() const;
+    int getnum_Apartamento() const;
+    int getNivel_Edificio() const;
+};
 
 propietario_Apartamento::propietario_Apartamento(string _nom_Usuario, string _contr_Usuario, int _num_Edificio, int _nivel_Edificio, int _num_Apartamento): Usuario(_nom_Usuario, _contr_Usuario) {
     num_Edificio = _num_Edificio;

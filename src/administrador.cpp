@@ -1,8 +1,12 @@
 #include <iostream>
 #include <fstream>
-#include <usuario.hpp>
-#include <administrador.hpp>
+#include "usuario.cpp"
 using namespace std;
+
+class administrador_Cond : public Usuario {
+public:
+    administrador_Cond(string _nom_Usuario, string _contr_Usuario);
+};
 
 administrador_Cond::administrador_Cond(string _nom_Usuario, string _contr_Usuario):Usuario(_nom_Usuario, _contr_Usuario) {
     setRol_Usuario("Administrador");
