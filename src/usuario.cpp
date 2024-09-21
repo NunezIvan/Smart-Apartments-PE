@@ -1,18 +1,22 @@
+#pragma once
+#include <iostream>
 #include <stdlib.h>
 #include <time.h>
 using namespace std;
 
 class Usuario{
     private:
-        string nom_Usuario, contr_Usuario, rol_Usuario;
+        string nombre, apellido, nom_Usuario, contr_Usuario, rol_Usuario;
         int id_Usuario;
     public:
-        Usuario(string _nom_Usuario, string _contr_Usuario);
+        Usuario(string _nombre, string _apellido);
         string getNom_Usuario() const;
         string getContr_Usuario() const;
         int getId_Usuario() const;
         void setRol_Usuario(string _rol_Usuario);
         void setId_Usuario(int _id_Usuario);
+        void generarNombreUsuario();
+        void generarContraseña();
 };
 
 int generate_ID() {
@@ -20,18 +24,10 @@ int generate_ID() {
     return rand() % 900000000 + 100000000;
 }
 
-Usuario::Usuario(string _nom_Usuario, string _contr_Usuario) {
-    nom_Usuario = _nom_Usuario;
-    contr_Usuario = _contr_Usuario;
-    id_Usuario = generate_ID();  // Generar ID
-}
-
-string Usuario::getNom_Usuario() const {
-    return nom_Usuario;
-}
-
-string Usuario::getContr_Usuario() const {
-    return contr_Usuario;
+Usuario::Usuario(string _nombre, string _apellido) {
+    nombre = _nombre;
+    apellido = _apellido;
+    id_Usuario = generate_ID(); 
 }
 
 int Usuario::getId_Usuario() const {
@@ -45,3 +41,21 @@ void Usuario::setRol_Usuario(string _rol_Usuario) {
 void Usuario::setId_Usuario(int _id_Usuario) {
     id_Usuario = _id_Usuario;
 }
+
+void Usuario::generarNombreUsuario() {
+        nom_Usuario = nombre + "." + apellido;
+}
+
+void Usuario::generarContraseña() {
+        contr_Usuario = "123456"; 
+}
+
+string Usuario::getNom_Usuario() const {
+    return nom_Usuario;
+}
+
+string Usuario::getContr_Usuario() const {
+    return contr_Usuario;
+}
+
+

@@ -1,8 +1,9 @@
+#pragma once
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <limits>
-
+#include "MenuAdministrador.cpp"
 using namespace std;
 
 
@@ -26,7 +27,7 @@ void inicio_SesionPropietario() {
     getline(cin, contrasena_ingresada);
 
     // Abrimos el archivo de propietarios desde la carpeta data
-    ifstream archivo("C:/Users/USER/Desktop/ESTRUCTURA PROYECTO/data/propietarios.txt");
+    ifstream archivo("D:/Smart-Apartments-PE/data/propietarios.txt");
     if (!archivo.is_open()) {
         cout << "Error al abrir el archivo de propietarios." << endl;
         return;
@@ -68,7 +69,7 @@ void inicio_SesionAdministrador() {
     getline(cin, contrasena_ingresada);
 
     // Abrimos el archivo de administradores desde la carpeta data
-    ifstream archivo("C:/Users/USER/Desktop/ESTRUCTURA PROYECTO/data/administradores.txt");
+    ifstream archivo("D:/Smart-Apartments-PE/data/administradores.txt");
     if (!archivo.is_open()) {
         cout << "Error al abrir el archivo de administradores." << endl;
         return;
@@ -78,11 +79,14 @@ void inicio_SesionAdministrador() {
     string nombre_archivo, contrasena_archivo;
     bool encontrado = false;
 
-    // Leemos línea por línea
     while (archivo >> id_archivo >> nombre_archivo >> contrasena_archivo) {
         if (id_archivo == id_ingresado && nombre_archivo == nombre_ingresado && contrasena_archivo == contrasena_ingresada) {
             cout << "Bienvenido, " << nombre_ingresado << "! Has iniciado sesión como Administrador." << endl;
             encontrado = true;
+            system("cls");
+            administrador_Cond admin(nombre_archivo, "ApellidoDesconocido"); // Usa el apellido correcto si lo tienes guardado
+
+            mostrarMenuAdministrador(admin);
             break;
         }
     }
@@ -93,6 +97,7 @@ void inicio_SesionAdministrador() {
 
     archivo.close();
 }
+
 
 // Función para el inicio de sesión de Mantenimiento
 void inicio_SesionMantenimiento() {
@@ -109,7 +114,7 @@ void inicio_SesionMantenimiento() {
     getline(cin, contrasena_ingresada);
 
     // Abrimos el archivo de mantenimiento desde la carpeta data
-    ifstream archivo("C:/Users/USER/Desktop/ESTRUCTURA PROYECTO/data/mantenimiento.txt");
+    ifstream archivo("D:/Smart-Apartments-PE/data/mantenimiento.txt");
     if (!archivo.is_open()) {
         cout << "Error al abrir el archivo de mantenimiento." << endl;
         return;
@@ -146,7 +151,7 @@ void inicio_Sesion() {
     cout << "3. Mantenimiento" << endl;
     cout << "Ingrese su opción: ";
     cin >> opcion;
-    limpiarBuffer();  // Limpiar el búfer después de leer la opción
+    limpiarBuffer(); 
 
     switch (opcion) {
         case 1:

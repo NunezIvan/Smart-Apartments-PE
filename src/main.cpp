@@ -1,10 +1,14 @@
 #include <iostream>
 #include <cstdlib>
 #include "login.cpp"
+#include "edificio.cpp"
+#include "administrador.cpp"
 
 using namespace std;
 
+
 int main() {
+
     fflush(stdin);
     int opcion;
     do {

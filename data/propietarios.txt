@@ -3,3 +3,5 @@
 345678901 Luis_Brenis Brenis123 1 3 304
 456789012 Diego_Espinoza Diego123 1 5 503
 567890123 Juan_Vazquez Juan123 1 2 207
+100005308 Juan_Carlos.ApellidoDesconocido 123456
+100005308 Juan_Carlos.ApellidoDesconocido 123456
