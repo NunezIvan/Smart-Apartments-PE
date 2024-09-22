@@ -12,43 +12,40 @@ class administrador_Cond : public Usuario {
     public:
         
        administrador_Cond(string _nombre, string _apellido) : Usuario(_nombre, _apellido) {
-        setRol_Usuario("Administrador");
-        // Solo guardar si el administrador no ha sido creado antes
-        if (!adminExiste(_nombre, _apellido)) {
-            ofstream file("D:/Smart-Apartments-PE/data/administradores.txt", ios::app);
-            if (file.is_open()) {
-                file << getId_Usuario() << " " << getNom_Usuario() << " " << getContr_Usuario() << "\n";
-                file.close();
-                }   
-            }
+            setRol_Usuario("Administrador");
+            if (adminExiste(_nombre, _apellido)) {
+                cout << "El administrador no existe, crea un nuevo registro si es necesario." << endl;
+            }   
         }
 
-    // Función para verificar si el admin ya está registrado
         bool adminExiste(string _nombre, string _apellido) {
-            ifstream archivo("D:/Smart-Apartments-PE/data/administradores.txt");
-            if (!archivo.is_open()) return false;
+            ifstream file("D:/Smart-Apartments-PE/data/administradores.txt");
+            if (!file.is_open()) return false;
         
             string nombre_archivo, apellido_archivo;
-            while (archivo >> nombre_archivo >> apellido_archivo) {
+            while (file >> nombre_archivo >> apellido_archivo) {
                 if (nombre_archivo == _nombre && apellido_archivo == _apellido) {
                     return true;
                 }
             }
-            archivo.close();
+            file.close();
             return false;
         }
         
         void registrarPropietario(vector<propietario_Apartamento>& propietarios, string nombre_propietario, string apellido_propietario) {
-            propietarios.push_back(propietario_Apartamento(nombre_propietario, apellido_propietario));
-            cout << "Propietario " << nombre_propietario << " registrado correctamente." << endl; 
-            generarNombreUsuario();
-            generarContraseña();  
+            propietario_Apartamento nuevoPropietario(nombre_propietario, apellido_propietario);
+            nuevoPropietario.generarNombreUsuario();  
+            nuevoPropietario.generarContraseña();   
+            propietarios.push_back(nuevoPropietario);
+            cout << "Propietario " << nombre_propietario << " registrado correctamente." << endl;
+    
             ofstream file("D:/Smart-Apartments-PE/data/propietarios.txt", ios::app);
             if (file.is_open()) {
-                file << getId_Usuario() << " " << getNom_Usuario() << " " << getContr_Usuario() << "\n";
+                file << nuevoPropietario.getId_Usuario() << " " << nuevoPropietario.getNombreUsuario() << " " << nuevoPropietario.getContraseña() << "\n";
                 file.close();
-            }  
+            }
         } 
+
 
         void asignarDepartamento(Edificio& edificio, int nivel, int numero_departamento, propietario_Apartamento& propietario) {
             Departamento& dep = edificio.obtenerDepartamento(nivel, numero_departamento);

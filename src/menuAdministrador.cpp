@@ -23,7 +23,7 @@ void manejarPropietarios(administrador_Cond& admin) {
     cout << "Ingrese el apellido del propietario: ";
     cin >> apellido_propietario;
 
-    // Registrar el propietario
+
     admin.registrarPropietario(listaPropietarios.listaPropietarios, nombre_propietario, apellido_propietario);
 
     cout << "Edificios disponibles: " << endl;

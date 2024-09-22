@@ -16,22 +16,18 @@ public:
         setRol_Usuario("Propietario");
         nombre = _nombre;
         apellido = _apellido;
-        ofstream file("propietarios.txt", ios::app);
+        
+        generarNombreUsuario(); 
+        generarContraseña(); 
+        ofstream file("D:/Smart-Apartments-PE/data/propietarios.txt", ios::app);
         if (file.is_open()) {
-        file << getId_Usuario() << " " << getNombreUsuario() << " " << getContraseña() << "\n";
+        file << getId_Usuario() << " " << getNom_Usuario() << " " << getContr_Usuario() << "\n";
         file.close();
         } else {
             cout << "No se pudo abrir el archivo para escritura." << endl;
         }
     }
 
-    void generarNombreUsuario() {
-        nombreUsuario = nombre + "." + apellido;
-    }
-
-    void generarContraseña() {
-        contraseña = "123456"; 
-    }
     void mostrarDatos() const{
         cout << "Propietario de Apartamento: " << nombre << endl;
     }

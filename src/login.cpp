@@ -69,8 +69,8 @@ void inicio_SesionAdministrador() {
     getline(cin, contrasena_ingresada);
 
     // Abrimos el archivo de administradores desde la carpeta data
-    ifstream archivo("D:/Smart-Apartments-PE/data/administradores.txt");
-    if (!archivo.is_open()) {
+    ifstream file("D:/Smart-Apartments-PE/data/administradores.txt");
+    if (!file.is_open()) {
         cout << "Error al abrir el archivo de administradores." << endl;
         return;
     }
@@ -79,7 +79,7 @@ void inicio_SesionAdministrador() {
     string nombre_archivo, contrasena_archivo;
     bool encontrado = false;
 
-    while (archivo >> id_archivo >> nombre_archivo >> contrasena_archivo) {
+    while (file >> id_archivo >> nombre_archivo >> contrasena_archivo) {
         if (id_archivo == id_ingresado && nombre_archivo == nombre_ingresado && contrasena_archivo == contrasena_ingresada) {
             cout << "Bienvenido, " << nombre_ingresado << "! Has iniciado sesión como Administrador." << endl;
             encontrado = true;
@@ -95,7 +95,7 @@ void inicio_SesionAdministrador() {
         cout << "Error: ID, nombre de usuario o contraseña incorrectos." << endl;
     }
 
-    archivo.close();
+    file.close();
 }
 
 
