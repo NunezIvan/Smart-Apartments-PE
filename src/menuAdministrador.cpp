@@ -1,84 +1,90 @@
-#pragma once 
 #include <iostream>
-#include <cstdlib>
 #include <fstream>
-#include "edificio.cpp"
-#include "propietarios.cpp"
+#include <vector>
+#include "infraestructura.cpp"
+#include "usuario_Apartamento.cpp"
 #include "administrador.cpp"
+
 using namespace std;
 
 string nombre_propietario, apellido_propietario;
 
-void manejarPropietarios(administrador_Cond& admin) {
-    int opcion;
-
-    Edificio edificio1("Edificio A", 5, 4);
-    Edificio edificio2("Edificio B", 3, 3);
-    vector<Edificio> edificios = {edificio1, edificio2}; 
-
-    Propietarios listaPropietarios;
-
-    cout << "Ingrese el nombre del propietario: ";
-    cin >> nombre_propietario;
-    cout << "Ingrese el apellido del propietario: ";
-    cin >> apellido_propietario;
-
-
-    admin.registrarPropietario(listaPropietarios.listaPropietarios, nombre_propietario, apellido_propietario);
-
-    cout << "Edificios disponibles: " << endl;
-    for (int i = 0; i < edificios.size(); i++) {
-        cout << i + 1 << ". " << edificios[i].nombre << endl;
+void mostrarEdificios(const vector<Edificio>& edificios) {
+    for (const auto& edificio : edificios) {
+        edificio.mostrarDepartamentos();
     }
-
-    int edificioSeleccionado;
-    cout << "Seleccione el edificio (1-" << edificios.size() << "): ";
-    cin >> edificioSeleccionado;
-    Edificio& edificio = edificios[edificioSeleccionado - 1];  
-
-    cout << "Departamentos en el " << edificio.nombre << ":\n";
-    edificio.mostrarDepartamentos();
-
-    int nivel, numero_departamento;
-    cout << "Seleccione el nivel: ";
-    cin >> nivel;
-    cout << "Seleccione el número de departamento: ";
-    cin >> numero_departamento;
-
-    propietario_Apartamento& propietario = listaPropietarios.obtenerPropietario(0); 
-    admin.asignarDepartamento(edificio, nivel, numero_departamento, propietario);
-
-    // Mostrar el estado actual del edificio
-    cout << "\nEstado actual del " << edificio.nombre << ":\n";
-    edificio.mostrarDepartamentos();
-
-    system("pause");
-    system("cls");  
 }
 
-void mostrarMenuAdministrador(administrador_Cond& admin) {
+void registrarPropietario(vector<Edificio>& edificios) {
+    string nombre, apellido, edificioNombre;
+    int nro_nivel, nmro_apartamento;
+
+    cout << "Ingrese el nombre del propietario: ";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');  // Limpiar el buffer correctamente
+    getline(cin, nombre);
+    cout << "Ingrese el apellido del propietario: ";
+    getline(cin, apellido);
+    cout << "Ingrese el nombre del edificio: ";
+    cin >> edificioNombre;
+    cout << "Ingrese el número de nivel: ";
+    cin >> nro_nivel;
+    cout << "Ingrese el número de apartamento: ";
+    cin >> nmro_apartamento;
+
+    bool encontrado = false;
+    for (auto& edificio : edificios) {
+        if (edificio.nombre == edificioNombre) {
+            if (nro_nivel > 0 && nro_nivel <= edificio.niveles.size()) {
+                if (nmro_apartamento > 0 && nmro_apartamento <= edificio.niveles[nro_nivel - 1].departamentos.size()) {
+                    Departamento& depto = edificio.obtenerDepartamento(nro_nivel, nmro_apartamento);
+                    if (!depto.tienePropietario()) {
+                        depto.propietario = nombre + "_" + apellido;
+                        cout << "Propietario registrado exitosamente.\n";
+                        propietario_Apartamento(nombre,apellido,nmro_apartamento,nro_nivel,edificioNombre);
+                        Departamento(nmro_apartamento,nro_nivel,edificioNombre,depto.propietario,true);  
+                        encontrado = true;
+                        break;
+                    } else {
+                        cout << "Error: Este departamento ya tiene propietario.\n";
+                        encontrado = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    if (!encontrado) {
+        cout << "Error: Datos no válidos o fuera de rango.\n";
+    }
+}
+
+
+
+
+void manejarPropietarios(){
     int opcion;
-    do {
-        cout << "=====================================" << endl;
-        cout << " BIENVENIDO AL MENU DE ADMINISTRADOR " << endl;
-        cout << "=====================================" << endl;
-        cout << "\n";
-        cout << "         1. Manejar Propietarios     " << endl;
-        cout << "         2. Salir                    " << endl;
-        cout << "\n" << endl;
+    vector<Edificio> edificios = {Edificio("Edificio_1", 5, 4), Edificio("Edificio_2", 5, 4)};
+
+    do{
+        cout << "1. Mostrar información de los edificios\n";
+        cout << "2. Registrar un nuevo propietario\n";
+        cout << "3. Salir\n";
         cout << "Seleccione una opción: ";
         cin >> opcion;
 
-        switch (opcion) {
+        switch(opcion) {
             case 1:
-                manejarPropietarios(admin);  
+                mostrarEdificios(edificios);
                 break;
             case 2:
-                cout << "Saliendo del programa..." << endl;
+                registrarPropietario(edificios);
+                break;
+            case 3:
                 break;
             default:
-                cout << "Opción no válida. Inténtelo de nuevo." << endl;
+                cout << "Opción no válida.\n";
                 break;
         }
-    } while (opcion != 2);
+    }while(opcion !=3);
 }

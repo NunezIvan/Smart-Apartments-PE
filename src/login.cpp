@@ -1,9 +1,9 @@
-#pragma once
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <limits>
-#include "MenuAdministrador.cpp"
+#include "menuAdministrador.cpp"
+
 using namespace std;
 
 
@@ -12,6 +12,7 @@ void limpiarBuffer() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
+// Función para el inicio de sesión de Propietario
 // Función para el inicio de sesión de Propietario
 void inicio_SesionPropietario() {
     int id_ingresado;
@@ -26,19 +27,31 @@ void inicio_SesionPropietario() {
     cout << "Ingrese su contraseña: ";
     getline(cin, contrasena_ingresada);
 
-    // Abrimos el archivo de propietarios desde la carpeta data
-    ifstream archivo("D:/Smart-Apartments-PE/data/propietarios.txt");
+    ifstream archivo("propietarios.txt");
     if (!archivo.is_open()) {
         cout << "Error al abrir el archivo de propietarios." << endl;
         return;
     }
 
-    int id_archivo, num_Edificio, nivel_Edificio, num_Apartamento;
-    string nombre_archivo, contrasena_archivo;
+    string linea;
     bool encontrado = false;
 
-    // Leemos línea por línea
-    while (archivo >> id_archivo >> nombre_archivo >> contrasena_archivo >> num_Edificio >> nivel_Edificio >> num_Apartamento) {
+    while (getline(archivo, linea)) {
+        stringstream ss(linea);
+        string id_str, num_Edificio_str, nivel_Edificio_str, num_Apartamento_str;
+        getline(ss, id_str, ';');
+        string nombre_archivo, contrasena_archivo;
+        getline(ss, nombre_archivo, ';');
+        getline(ss, contrasena_archivo, ';');
+        getline(ss, num_Edificio_str, ';');
+        getline(ss, nivel_Edificio_str, ';');
+        getline(ss, num_Apartamento_str);
+
+        int id_archivo = stoi(id_str);
+        int num_Edificio = stoi(num_Edificio_str);
+        int nivel_Edificio = stoi(nivel_Edificio_str);
+        int num_Apartamento = stoi(num_Apartamento_str);
+
         if (id_archivo == id_ingresado && nombre_archivo == nombre_ingresado && contrasena_archivo == contrasena_ingresada) {
             cout << "Bienvenido, " << nombre_ingresado << "! Has iniciado sesión como Propietario." << endl;
             cout << "Edificio: " << num_Edificio << ", Nivel: " << nivel_Edificio << ", Apartamento: " << num_Apartamento << endl;
@@ -54,6 +67,7 @@ void inicio_SesionPropietario() {
     archivo.close();
 }
 
+
 // Función para el inicio de sesión de Administrador
 void inicio_SesionAdministrador() {
     int id_ingresado;
@@ -68,25 +82,30 @@ void inicio_SesionAdministrador() {
     cout << "Ingrese su contraseña: ";
     getline(cin, contrasena_ingresada);
 
-    // Abrimos el archivo de administradores desde la carpeta data
-    ifstream file("D:/Smart-Apartments-PE/data/administradores.txt");
-    if (!file.is_open()) {
+    ifstream archivo("administradores.txt");
+    if (!archivo.is_open()) {
         cout << "Error al abrir el archivo de administradores." << endl;
         return;
     }
 
-    int id_archivo;
-    string nombre_archivo, contrasena_archivo;
+    string linea;
     bool encontrado = false;
 
-    while (file >> id_archivo >> nombre_archivo >> contrasena_archivo) {
+    while (getline(archivo, linea)) {
+        stringstream ss(linea);
+        string id_str;
+        string nombre_archivo, contrasena_archivo;
+
+        getline(ss, id_str, ';');
+        getline(ss, nombre_archivo, ';');
+        getline(ss, contrasena_archivo, ';');
+
+        int id_archivo = stoi(id_str);
+
         if (id_archivo == id_ingresado && nombre_archivo == nombre_ingresado && contrasena_archivo == contrasena_ingresada) {
             cout << "Bienvenido, " << nombre_ingresado << "! Has iniciado sesión como Administrador." << endl;
             encontrado = true;
-            system("cls");
-            administrador_Cond admin(nombre_archivo, "ApellidoDesconocido"); // Usa el apellido correcto si lo tienes guardado
-
-            mostrarMenuAdministrador(admin);
+            manejarPropietarios(); // Función para manejar propietarios después de iniciar sesión
             break;
         }
     }
@@ -95,9 +114,8 @@ void inicio_SesionAdministrador() {
         cout << "Error: ID, nombre de usuario o contraseña incorrectos." << endl;
     }
 
-    file.close();
+    archivo.close();
 }
-
 
 // Función para el inicio de sesión de Mantenimiento
 void inicio_SesionMantenimiento() {
@@ -113,19 +131,26 @@ void inicio_SesionMantenimiento() {
     cout << "Ingrese su contraseña: ";
     getline(cin, contrasena_ingresada);
 
-    // Abrimos el archivo de mantenimiento desde la carpeta data
-    ifstream archivo("D:/Smart-Apartments-PE/data/mantenimiento.txt");
+    ifstream archivo("mantenimiento.txt");
     if (!archivo.is_open()) {
         cout << "Error al abrir el archivo de mantenimiento." << endl;
         return;
     }
 
-    int id_archivo;
-    string nombre_archivo, contrasena_archivo;
+    string linea;
     bool encontrado = false;
 
-    // Leemos línea por línea
-    while (archivo >> id_archivo >> nombre_archivo >> contrasena_archivo) {
+    while (getline(archivo, linea)) {
+        stringstream ss(linea);
+        string id_str;
+        string nombre_archivo, contrasena_archivo;
+
+        getline(ss, id_str, ';');
+        getline(ss, nombre_archivo, ';');
+        getline(ss, contrasena_archivo, ';');
+
+        int id_archivo = stoi(id_str);
+
         if (id_archivo == id_ingresado && nombre_archivo == nombre_ingresado && contrasena_archivo == contrasena_ingresada) {
             cout << "Bienvenido, " << nombre_ingresado << "! Has iniciado sesión como Personal de Mantenimiento." << endl;
             encontrado = true;
@@ -140,7 +165,7 @@ void inicio_SesionMantenimiento() {
     archivo.close();
 }
 
-// Función principal para seleccionar tipo de usuario
+
 void inicio_Sesion() {
     int opcion;
 
@@ -151,7 +176,7 @@ void inicio_Sesion() {
     cout << "3. Mantenimiento" << endl;
     cout << "Ingrese su opción: ";
     cin >> opcion;
-    limpiarBuffer(); 
+    limpiarBuffer();  // Limpiar el búfer después de leer la opción
 
     switch (opcion) {
         case 1:

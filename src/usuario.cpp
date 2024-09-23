@@ -6,17 +6,16 @@ using namespace std;
 
 class Usuario{
     private:
-        string nombre, apellido, nom_Usuario, contr_Usuario, rol_Usuario;
+        string nombre, apellido, nom_Usuario, contr_Usuario;
         int id_Usuario;
     public:
         Usuario(string _nombre, string _apellido);
         string getNom_Usuario() const;
         string getContr_Usuario() const;
         int getId_Usuario() const;
-        void setRol_Usuario(string _rol_Usuario);
         void setId_Usuario(int _id_Usuario);
         void generarNombreUsuario();
-        void generarContraseña();
+        void generarContrasena();
 };
 
 int generate_ID() {
@@ -34,19 +33,15 @@ int Usuario::getId_Usuario() const {
     return id_Usuario;
 }
 
-void Usuario::setRol_Usuario(string _rol_Usuario) {
-    rol_Usuario = _rol_Usuario;
-}
-
 void Usuario::setId_Usuario(int _id_Usuario) {
     id_Usuario = _id_Usuario;
 }
 
 void Usuario::generarNombreUsuario() {
-        nom_Usuario = nombre + "." + apellido;
+        nom_Usuario = nombre + "_" + apellido;
 }
 
-void Usuario::generarContraseña() {
+void Usuario::generarContrasena() {
         contr_Usuario = "123456"; 
 }
 

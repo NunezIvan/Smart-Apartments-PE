@@ -1,14 +1,46 @@
 #include <iostream>
 #include <cstdlib>
 #include "login.cpp"
-#include "edificio.cpp"
 #include "administrador.cpp"
+#include "usuario_Apartamento.cpp"
 
 using namespace std;
 
+void crearArchivosDefecto() {
+    ofstream archivo1("propietarios.txt", ios::out | ios::app);
+    if (archivo1.is_open()) {
+        archivo1.close();
+    } else {
+        cout << "Error al crear 'propietarios.txt'.\n";
+    }
 
+    ofstream archivo2("administradores.txt", ios::out | ios::app);
+    if (archivo2.is_open()) {
+        archivo2.close();
+    } else {
+        cout << "Error al crear 'administradores.txt'.\n";
+    }
+
+    ofstream archivo3("mantenimiento.txt", ios::out | ios::app);
+    if (archivo3.is_open()) {
+        archivo3.close();
+    } else {
+        cout << "Error al crear 'mantenimiento.txt'.\n";
+    }
+
+    ofstream archivo4("departamentos.txt", ios::out | ios::app);
+    if (archivo4.is_open()) {
+        archivo4.close();
+    } else {
+        cout << "Error al crear 'mantenimiento.txt'.\n";
+    }
+}
+
+void usuario_Defecto(){
+    administrador_Cond admin("Ivan","Nunez");
+}
 int main() {
-
+    crearArchivosDefecto();
     fflush(stdin);
     int opcion;
     do {
@@ -36,3 +68,4 @@ int main() {
     } while (opcion != 2);
     return 0;
 }
+

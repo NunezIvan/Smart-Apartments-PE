@@ -1,0 +1,3 @@
+Luis_Guevara;1;1;Edificio_1
+Luis_Brenis;1;3;Edificio_2
+Joshua_Pato;2;5;Edificio_1

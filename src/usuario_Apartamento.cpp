@@ -3,38 +3,47 @@
 #include <fstream>
 #include <stdlib.h>
 #include "usuario.cpp"
-
 using namespace std;
+
 class propietario_Apartamento : public Usuario {
 private:
     string nombre;
     string apellido;
     string nombreUsuario;
     string contraseña;
+    int nmro_apart;
+    int nivel;
+    string nmbr_edificio;
+
 public:
-    propietario_Apartamento(string _nombre, string _apellido):Usuario(_nombre, _apellido){
-        setRol_Usuario("Propietario");
+    // Constructor
+    propietario_Apartamento(string _nombre, string _apellido, int _nmro_apart, int _nivel, string nmbr_edificio): Usuario(_nombre, _apellido), nmro_apart(_nmro_apart), nivel(_nivel), nmbr_edificio(nmbr_edificio) {
         nombre = _nombre;
         apellido = _apellido;
-        
         generarNombreUsuario(); 
-        generarContraseña(); 
-        ofstream file("D:/Smart-Apartments-PE/data/propietarios.txt", ios::app);
+        generarContrasena();    
+
+        ofstream file("propietarios.txt", ios::app);
         if (file.is_open()) {
-        file << getId_Usuario() << " " << getNom_Usuario() << " " << getContr_Usuario() << "\n";
-        file.close();
+            file << getId_Usuario() << ";" << getNom_Usuario() << ";" << getContr_Usuario() << ";"
+                 << nmro_apart << ";" << nivel << ";" << nmbr_edificio << "\n";
+            file.close();
         } else {
             cout << "No se pudo abrir el archivo para escritura." << endl;
         }
     }
 
-    void mostrarDatos() const{
-        cout << "Propietario de Apartamento: " << nombre << endl;
-    }
-
-    string getNombre() {return nombre;}
-    string getApellido() {return apellido;}
+    // Métodos para obtener información del propietario
+    string getNombre() { return nombre; }
+    string getApellido() { return apellido; }
     string getNombreUsuario() const { return nombreUsuario; }
-    string getContraseña() const { return contraseña; }
 
+    // Método para mostrar los datos del apartamento
+    void getDatosDelApartamento() {
+        cout << "Nombre del propietario: " << nombre << endl;
+        cout << "Apellido del propietario: " << apellido << endl;
+        cout << "Nombre del edificio: " << nmbr_edificio << endl;
+        cout << "Nivel del apartamento: " << nivel << endl;
+        cout << "Nmro del apartamento: " << nmro_apart << endl;  // Corregido para mostrar el número correcto
+    }
 };
