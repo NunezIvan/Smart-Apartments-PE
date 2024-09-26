@@ -5,7 +5,7 @@
 #include "usuario.cpp"
 using namespace std;
 
-class propietario_Apartamento : public Usuario {
+class usuario_Apartamento : public Usuario {
 private:
     string nombre;
     string apellido;
@@ -17,7 +17,7 @@ private:
 
 public:
     // Constructor
-    propietario_Apartamento(string _nombre, string _apellido, int _nmro_apart, int _nivel, string nmbr_edificio): Usuario(_nombre, _apellido), nmro_apart(_nmro_apart), nivel(_nivel), nmbr_edificio(nmbr_edificio) {
+    usuario_Apartamento(string _nombre, string _apellido, int _nmro_apart, int _nivel, string nmbr_edificio): Usuario(_nombre, _apellido), nmro_apart(_nmro_apart), nivel(_nivel), nmbr_edificio(nmbr_edificio) {
         nombre = _nombre;
         apellido = _apellido;
         generarNombreUsuario(); 

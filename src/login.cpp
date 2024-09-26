@@ -2,17 +2,22 @@
 #include <fstream>
 #include <string>
 #include <limits>
-#include "menuAdministrador.cpp"
+#include <sstream>
+#include "menuAdministrador.cpp" // Incluir menuAdministrador.cpp
+#include "administrador.cpp" // Incluir administrador.cpp
+#include "usuario_Apartamento.cpp" // Incluir propietario_Apartamento.cpp
 
 using namespace std;
 
+// Declarar 'edificios' como externo
+extern EdificioLista edificios;
 
+// Función para limpiar el buffer
 void limpiarBuffer() {
     cin.clear();
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
-// Función para el inicio de sesión de Propietario
 // Función para el inicio de sesión de Propietario
 void inicio_SesionPropietario() {
     int id_ingresado;
@@ -38,23 +43,30 @@ void inicio_SesionPropietario() {
 
     while (getline(archivo, linea)) {
         stringstream ss(linea);
-        string id_str, num_Edificio_str, nivel_Edificio_str, num_Apartamento_str;
+        string id_str, nombre_archivo, contrasena_archivo, nmro_apart_str, nivel_str, edificioNombre;
         getline(ss, id_str, ';');
-        string nombre_archivo, contrasena_archivo;
         getline(ss, nombre_archivo, ';');
         getline(ss, contrasena_archivo, ';');
-        getline(ss, num_Edificio_str, ';');
-        getline(ss, nivel_Edificio_str, ';');
-        getline(ss, num_Apartamento_str);
+        getline(ss, nmro_apart_str, ';');
+        getline(ss, nivel_str, ';');
+        getline(ss, edificioNombre);
 
-        int id_archivo = stoi(id_str);
-        int num_Edificio = stoi(num_Edificio_str);
-        int nivel_Edificio = stoi(nivel_Edificio_str);
-        int num_Apartamento = stoi(num_Apartamento_str);
+        int id_archivo;
+        try {
+            id_archivo = stoi(id_str);
+        }
+        catch (const invalid_argument& e) {
+            cout << "ID inválido en la línea: " << linea << endl;
+            continue;
+        }
+        catch (const out_of_range& e) {
+            cout << "ID fuera de rango en la línea: " << linea << endl;
+            continue;
+        }
 
         if (id_archivo == id_ingresado && nombre_archivo == nombre_ingresado && contrasena_archivo == contrasena_ingresada) {
             cout << "Bienvenido, " << nombre_ingresado << "! Has iniciado sesión como Propietario." << endl;
-            cout << "Edificio: " << num_Edificio << ", Nivel: " << nivel_Edificio << ", Apartamento: " << num_Apartamento << endl;
+            cout << "Edificio: " << edificioNombre << ", Nivel: " << nivel_str << ", Apartamento: " << nmro_apart_str << endl;
             encontrado = true;
             break;
         }
@@ -66,7 +78,6 @@ void inicio_SesionPropietario() {
 
     archivo.close();
 }
-
 
 // Función para el inicio de sesión de Administrador
 void inicio_SesionAdministrador() {
@@ -93,19 +104,28 @@ void inicio_SesionAdministrador() {
 
     while (getline(archivo, linea)) {
         stringstream ss(linea);
-        string id_str;
-        string nombre_archivo, contrasena_archivo;
-
+        string id_str, nombre_archivo, contrasena_archivo;
         getline(ss, id_str, ';');
         getline(ss, nombre_archivo, ';');
         getline(ss, contrasena_archivo, ';');
 
-        int id_archivo = stoi(id_str);
+        int id_archivo;
+        try {
+            id_archivo = stoi(id_str);
+        }
+        catch (const invalid_argument& e) {
+            cout << "ID inválido en la línea: " << linea << endl;
+            continue;
+        }
+        catch (const out_of_range& e) {
+            cout << "ID fuera de rango en la línea: " << linea << endl;
+            continue;
+        }
 
         if (id_archivo == id_ingresado && nombre_archivo == nombre_ingresado && contrasena_archivo == contrasena_ingresada) {
             cout << "Bienvenido, " << nombre_ingresado << "! Has iniciado sesión como Administrador." << endl;
             encontrado = true;
-            manejarPropietarios(); // Función para manejar propietarios después de iniciar sesión
+            menuAdministrador(); // Función para manejar propietarios después de iniciar sesión
             break;
         }
     }
@@ -142,14 +162,23 @@ void inicio_SesionMantenimiento() {
 
     while (getline(archivo, linea)) {
         stringstream ss(linea);
-        string id_str;
-        string nombre_archivo, contrasena_archivo;
-
+        string id_str, nombre_archivo, contrasena_archivo;
         getline(ss, id_str, ';');
         getline(ss, nombre_archivo, ';');
         getline(ss, contrasena_archivo, ';');
 
-        int id_archivo = stoi(id_str);
+        int id_archivo;
+        try {
+            id_archivo = stoi(id_str);
+        }
+        catch (const invalid_argument& e) {
+            cout << "ID inválido en la línea: " << linea << endl;
+            continue;
+        }
+        catch (const out_of_range& e) {
+            cout << "ID fuera de rango en la línea: " << linea << endl;
+            continue;
+        }
 
         if (id_archivo == id_ingresado && nombre_archivo == nombre_ingresado && contrasena_archivo == contrasena_ingresada) {
             cout << "Bienvenido, " << nombre_ingresado << "! Has iniciado sesión como Personal de Mantenimiento." << endl;
@@ -165,11 +194,17 @@ void inicio_SesionMantenimiento() {
     archivo.close();
 }
 
-
+// Función para iniciar sesión
 void inicio_Sesion() {
     int opcion;
 
-    system("cls");
+    // Limpiar la pantalla
+    #ifdef _WIN32
+        system("cls");
+    #else
+        system("clear");
+    #endif
+
     cout << "Seleccione el tipo de usuario para iniciar sesión:" << endl;
     cout << "1. Propietario" << endl;
     cout << "2. Administrador" << endl;
