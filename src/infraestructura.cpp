@@ -136,7 +136,6 @@ public:
         return nullptr;  // Si no se encuentra, retornar nullptr
     }
 
-
     void clear() {
         NivelNodo* actual = cabeza;
         while (actual != nullptr) {
@@ -170,10 +169,9 @@ struct Edificio {
         // Buscar el nivel especificado
         NivelNodo* nivelNode;
 
-
         // Verificar que el número de nivel esté dentro del rango esperado
         if (nivel < 1 || nivel > cantidad_niveles) {
-            return nullptr;  // Nivel fuera de rango
+            return nullptr;
         }
 
         // Buscar el departamento en el nivel especificado
@@ -187,15 +185,11 @@ struct Edificio {
         // Retornar el puntero al departamento encontrado
         return &(deptoNode->data);
     }
-
-
-
 };
 
 struct EdificioNodo {
     Edificio data;
     EdificioNodo* siguiente;
-
     EdificioNodo(const Edificio& edificio) : data(edificio), siguiente(nullptr) {}
 };
 
@@ -269,7 +263,6 @@ public:
             cout << i + 1 << ". " << edificios[i] << "\n";
         }
 
-        // Obtener la selección del usuario
         int seleccion;
         cout << "Seleccione el número de edificio: ";
         cin >> seleccion;
@@ -285,7 +278,7 @@ public:
         cout << "\nMostrando departamentos del edificio: " << edificioSeleccionado << "\n";
 
         // Recorrer los niveles dentro del edificio seleccionado
-        for (int nivel = 1; nivel <= 5; ++nivel) {  // Asumimos un número máximo de 5 niveles
+        for (int nivel = 1; nivel <= 5; ++nivel) {
             bool hayDepartamentosEnNivel = false;
             actual = departamentosCargados.cabeza;
 

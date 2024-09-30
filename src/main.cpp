@@ -39,6 +39,7 @@ void crearArchivosDefecto() {
     else {
         cout << "Error al crear 'departamentos.txt'.\n";
     }
+
 }
 
 // Función para crear un usuario administrador por defecto

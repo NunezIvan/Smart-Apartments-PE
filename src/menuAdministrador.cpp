@@ -4,6 +4,7 @@
 #include <string>
 #include "infraestructura.cpp" 
 #include "usuario_Apartamento.cpp"
+#include "egresos.cpp"
 
 using namespace std;
 
@@ -121,7 +122,8 @@ void menuAdministrador() {
     do {
         cout << "1. Mostrar información de los edificios\n";
         cout << "2. Registrar un nuevo propietario\n";
-        cout << "3. Salir\n";
+        cout << "3. Gestion de control de caja \n";
+        cout << "4. Salir\n";
         cout << "Seleccione una opción: ";
         cin >> opcion;
 
@@ -133,6 +135,9 @@ void menuAdministrador() {
                 registrarPropietario();
                 break;
             case 3:
+                gestionControlCaja();
+                break;
+            case 4:
                 break;
             default:
                 cout << "Opción no válida.\n";
