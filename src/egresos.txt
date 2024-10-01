@@ -1,1 +1,2 @@
 Mante. Ascensor;Enero;en Efectivo;130
+Pago Agua;Enero;en Efectivo;667.7

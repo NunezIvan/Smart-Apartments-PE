@@ -8,7 +8,16 @@
 
 using namespace std;
 
-EdificioLista edificios;
+EdificioLista crearEdificiosListaporDefecto(){
+    EdificioLista edificios;
+    Edificio edificio1("Edificio_1", 5, 4);
+    edificios.insertarAlFinal(edificio1);
+    Edificio edificio2("Edificio_2", 5, 4);
+    edificios.insertarAlFinal(edificio2);
+    return edificios;
+}
+
+EdificioLista edificios = crearEdificiosListaporDefecto();
 
 DepartamentoLista cargarDepartamentos() {
     DepartamentoLista departamentosCargados;  // Lista de departamentos cargados
@@ -51,11 +60,79 @@ DepartamentoLista cargarDepartamentos() {
     return departamentosCargados;  // Retornar la lista de departamentos cargados
 }
 
+void modificarArchivoPropietario(string nombre_Usuario, string edificioNombre, int nmro_apartamento, int nro_nivel) {
+    ifstream archivoLectura("departamentos.txt");
+    ofstream archivoEscritura("departamentos_Temporal.txt");
+
+    if (!archivoLectura.is_open() || !archivoEscritura.is_open()) {
+        cout << "No se puede abrir el archivo" << endl;  // Si no se puede abrir uno de los archivos
+        return;
+    }
+
+    string linea;
+    bool modificado = false;
+
+    while (getline(archivoLectura, linea)) {
+        if (linea.empty()) continue;  // Saltar líneas vacías
+        
+        stringstream ss(linea);
+        string propietario, nmro_apart_str, nro_nivel_str, nmbr_edificio;
+        
+        // Dividir la línea en partes usando el delimitador ';'
+        if (!getline(ss, propietario, ';') ||
+            !getline(ss, nmro_apart_str, ';') ||
+            !getline(ss, nro_nivel_str, ';') ||
+            !getline(ss, nmbr_edificio)) {
+            archivoEscritura << linea << endl;  // Escribir línea original si hay error en el formato
+            continue;
+        }
+
+        // Convertir strings a enteros con manejo de excepciones
+        int nmro_apartamento_arch;
+        int nro_nivel_arch;
+        try {
+            nmro_apartamento_arch = stoi(nmro_apart_str);
+            nro_nivel_arch = stoi(nro_nivel_str);
+        } catch (const invalid_argument&) { 
+            archivoEscritura << linea << endl;  // Escribir línea original si falla la conversión
+            continue;
+        } catch (const out_of_range&) {
+            archivoEscritura << linea << endl;  // Escribir línea original si está fuera de rango
+            continue;
+        }
+
+        // Verificar si es la línea que queremos modificar
+        if (nmro_apartamento == nmro_apartamento_arch && nro_nivel == nro_nivel_arch && nmbr_edificio == edificioNombre) {
+            // Modificar la línea
+            archivoEscritura << nombre_Usuario << ";" << nmro_apartamento << ";" << nro_nivel << ";" << nmbr_edificio  << endl;
+            modificado = true;
+        } else {
+            // Escribir la línea original
+            archivoEscritura << linea << endl;
+        }
+    }
+
+    archivoLectura.close();
+    archivoEscritura.close();
+
+    // Reemplazar el archivo original con el archivo temporal
+    if (modificado) {
+        remove("departamentos.txt");
+        rename("departamentos_Temporal.txt", "departamentos.txt");
+        cout << "El archivo ha sido modificado correctamente." << endl;
+    } else {
+        remove("departamentos_Temporal.txt"); // Eliminar el archivo temporal si no hubo modificaciones
+        cout << "No se encontró la línea para modificar." << endl;
+    }
+}
+
 
 void registrarPropietario() {
     string nombre, apellido, edificioNombre;
-    int nro_nivel, nmro_apartamento;
+    int nro_nivel, nmro_apartamento,DNI;
 
+    cout << "Ingrese el DNI del propietario: ";
+    cin >> DNI;
     cout << "Ingrese el nombre del propietario: ";
     cin.ignore();  // Limpiar el buffer correctamente
     getline(cin, nombre);
@@ -72,49 +149,30 @@ void registrarPropietario() {
     if (edificioNode != nullptr) {
         Edificio& edificio = edificioNode->data;
         
-        // Llamamos a la función obtenerDepartamento
-        Departamento* depto = edificio.obtenerDepartamento(nro_nivel, nmro_apartamento);
-        
-        if (depto != nullptr) {  // Si el departamento existe
-            if (!depto->tienePropietario()) {  // Verificar si el departamento está vacío
-                string nombreUsuario = nombre + "_" + apellido;
-                depto->propietario = nombreUsuario;
-                cout << "Propietario registrado exitosamente.\n";
+        DepartamentoLista depas = cargarDepartamentos();
+        if (depas.buscar(nmro_apartamento,nro_nivel,edificioNombre) != nullptr) {  // Verificar si el departamento está vacío
+            string nombreUsuario = nombre + "_" + apellido;
+            cout << "Propietario registrado exitosamente.\n";
 
-                // Crear el propietario y registrar en "propietarios.txt"
-                usuario_Apartamento propietario(nombre, apellido, nmro_apartamento, nro_nivel, edificioNombre);
+            // Crear el propietario y registrar en "propietarios.txt"
+            usuario_Apartamento propietario(nombre, apellido, nmro_apartamento, nro_nivel, edificioNombre,DNI);
 
-                // Registrar el departamento en "departamentos.txt"
-                ofstream file("departamentos.txt", ios::app);
-                if (file.is_open()) {
-                    file << nombreUsuario << ";" << nmro_apartamento << ";" << nro_nivel << ";" << edificioNombre << "\n";
-                    file.close();
-                } else {
-                    cout << "No se pudo abrir el archivo para escritura de departamentos." << endl;
-                }
-            } else {
-                cout << "Error: Este departamento ya tiene propietario.\n";
-            }
+            //Modificar el archivo departamentos.txtdaaaaaaaaa
+            modificarArchivoPropietario(nombreUsuario,edificioNombre,nmro_apartamento,nro_nivel);
+
         } else {
-            // Si el departamento no existe, mostrar un error
-            cout << "Error: Departamento no encontrado o fuera de rango.\n";
+            cout << "Error: Este departamento ya tiene propietario.\n";
         }
     } else {
         cout << "Error: Edificio no encontrado.\n";
     }
 }
 
-
-
 void mostrarEdificios(DepartamentoLista& departamentosCargados) {
     edificios.mostrarMenuEdificios(departamentosCargados);
 }
 
 void menuAdministrador() {
-    Edificio edificio1("Edificio_1", 5, 4);
-    edificios.insertarAlFinal(edificio1);
-    Edificio edificio2("Edificio_2", 5, 4);
-    edificios.insertarAlFinal(edificio2);
 
     DepartamentoLista departamentosCargados = cargarDepartamentos();
 

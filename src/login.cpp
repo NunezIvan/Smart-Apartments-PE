@@ -3,9 +3,9 @@
 #include <string>
 #include <limits>
 #include <sstream>
-#include "menuAdministrador.cpp" // Incluir menuAdministrador.cpp
-#include "administrador.cpp" // Incluir administrador.cpp
-#include "usuario_Apartamento.cpp" // Incluir propietario_Apartamento.cpp
+#include "menuAdministrador.cpp" 
+#include "administrador.cpp" 
+#include "usuario_Apartamento.cpp" 
 
 using namespace std;
 
@@ -20,12 +20,12 @@ void limpiarBuffer() {
 
 // Función para el inicio de sesión de Propietario
 void inicio_SesionPropietario() {
-    int id_ingresado;
+    int dni_ingresado;  
     string nombre_ingresado, contrasena_ingresada;
 
     cout << "Inicio de Sesión - Propietario" << endl;
-    cout << "Ingrese su ID: ";
-    cin >> id_ingresado;
+    cout << "Ingrese su DNI: ";  
+    cin >> dni_ingresado;
     limpiarBuffer();
     cout << "Ingrese su nombre de usuario: ";
     getline(cin, nombre_ingresado);
@@ -43,28 +43,28 @@ void inicio_SesionPropietario() {
 
     while (getline(archivo, linea)) {
         stringstream ss(linea);
-        string id_str, nombre_archivo, contrasena_archivo, nmro_apart_str, nivel_str, edificioNombre;
-        getline(ss, id_str, ';');
+        string dni_str, nombre_archivo, contrasena_archivo, nmro_apart_str, nivel_str, edificioNombre;
+        getline(ss, dni_str, ';');
         getline(ss, nombre_archivo, ';');
         getline(ss, contrasena_archivo, ';');
         getline(ss, nmro_apart_str, ';');
         getline(ss, nivel_str, ';');
         getline(ss, edificioNombre);
 
-        int id_archivo;
+        int dni_archivo;
         try {
-            id_archivo = stoi(id_str);
+            dni_archivo = stoi(dni_str);
         }
         catch (const invalid_argument& e) {
-            cout << "ID inválido en la línea: " << linea << endl;
+            cout << "DNI inválido en la línea: " << linea << endl;
             continue;
         }
         catch (const out_of_range& e) {
-            cout << "ID fuera de rango en la línea: " << linea << endl;
+            cout << "DNI fuera de rango en la línea: " << linea << endl;
             continue;
         }
 
-        if (id_archivo == id_ingresado && nombre_archivo == nombre_ingresado && contrasena_archivo == contrasena_ingresada) {
+        if (dni_archivo == dni_ingresado && nombre_archivo == nombre_ingresado && contrasena_archivo == contrasena_ingresada) {
             cout << "Bienvenido, " << nombre_ingresado << "! Has iniciado sesión como Propietario." << endl;
             cout << "Edificio: " << edificioNombre << ", Nivel: " << nivel_str << ", Apartamento: " << nmro_apart_str << endl;
             encontrado = true;
@@ -73,7 +73,7 @@ void inicio_SesionPropietario() {
     }
 
     if (!encontrado) {
-        cout << "Error: ID, nombre de usuario o contraseña incorrectos." << endl;
+        cout << "Error: DNI, nombre de usuario o contraseña incorrectos." << endl;
     }
 
     archivo.close();
@@ -81,12 +81,12 @@ void inicio_SesionPropietario() {
 
 // Función para el inicio de sesión de Administrador
 void inicio_SesionAdministrador() {
-    int id_ingresado;
+    int dni_ingresado;  // Cambié `id_ingresado` a `dni_ingresado`
     string nombre_ingresado, contrasena_ingresada;
 
     cout << "Inicio de Sesión - Administrador" << endl;
-    cout << "Ingrese su ID: ";
-    cin >> id_ingresado;
+    cout << "Ingrese su DNI: ";  // Cambié "ID" a "DNI"
+    cin >> dni_ingresado;
     limpiarBuffer();
     cout << "Ingrese su nombre de usuario: ";
     getline(cin, nombre_ingresado);
@@ -104,25 +104,25 @@ void inicio_SesionAdministrador() {
 
     while (getline(archivo, linea)) {
         stringstream ss(linea);
-        string id_str, nombre_archivo, contrasena_archivo;
-        getline(ss, id_str, ';');
+        string dni_str, nombre_archivo, contrasena_archivo;
+        getline(ss, dni_str, ';');
         getline(ss, nombre_archivo, ';');
         getline(ss, contrasena_archivo, ';');
 
-        int id_archivo;
+        int dni_archivo;
         try {
-            id_archivo = stoi(id_str);
+            dni_archivo = stoi(dni_str);
         }
         catch (const invalid_argument& e) {
-            cout << "ID inválido en la línea: " << linea << endl;
+            cout << "DNI inválido en la línea: " << linea << endl;
             continue;
         }
         catch (const out_of_range& e) {
-            cout << "ID fuera de rango en la línea: " << linea << endl;
+            cout << "DNI fuera de rango en la línea: " << linea << endl;
             continue;
         }
 
-        if (id_archivo == id_ingresado && nombre_archivo == nombre_ingresado && contrasena_archivo == contrasena_ingresada) {
+        if (dni_archivo == dni_ingresado && nombre_archivo == nombre_ingresado && contrasena_archivo == contrasena_ingresada) {
             cout << "Bienvenido, " << nombre_ingresado << "! Has iniciado sesión como Administrador." << endl;
             encontrado = true;
             menuAdministrador(); // Función para manejar propietarios después de iniciar sesión
@@ -131,7 +131,7 @@ void inicio_SesionAdministrador() {
     }
 
     if (!encontrado) {
-        cout << "Error: ID, nombre de usuario o contraseña incorrectos." << endl;
+        cout << "Error: DNI, nombre de usuario o contraseña incorrectos." << endl;
     }
 
     archivo.close();
@@ -139,12 +139,12 @@ void inicio_SesionAdministrador() {
 
 // Función para el inicio de sesión de Mantenimiento
 void inicio_SesionMantenimiento() {
-    int id_ingresado;
+    int dni_ingresado;  // Cambié `id_ingresado` a `dni_ingresado`
     string nombre_ingresado, contrasena_ingresada;
 
     cout << "Inicio de Sesión - Mantenimiento" << endl;
-    cout << "Ingrese su ID: ";
-    cin >> id_ingresado;
+    cout << "Ingrese su DNI: ";  // Cambié "ID" a "DNI"
+    cin >> dni_ingresado;
     limpiarBuffer();
     cout << "Ingrese su nombre de usuario: ";
     getline(cin, nombre_ingresado);
@@ -162,25 +162,25 @@ void inicio_SesionMantenimiento() {
 
     while (getline(archivo, linea)) {
         stringstream ss(linea);
-        string id_str, nombre_archivo, contrasena_archivo;
-        getline(ss, id_str, ';');
+        string dni_str, nombre_archivo, contrasena_archivo;
+        getline(ss, dni_str, ';');
         getline(ss, nombre_archivo, ';');
         getline(ss, contrasena_archivo, ';');
 
-        int id_archivo;
+        int dni_archivo;
         try {
-            id_archivo = stoi(id_str);
+            dni_archivo = stoi(dni_str);
         }
         catch (const invalid_argument& e) {
-            cout << "ID inválido en la línea: " << linea << endl;
+            cout << "DNI inválido en la línea: " << linea << endl;
             continue;
         }
         catch (const out_of_range& e) {
-            cout << "ID fuera de rango en la línea: " << linea << endl;
+            cout << "DNI fuera de rango en la línea: " << linea << endl;
             continue;
         }
 
-        if (id_archivo == id_ingresado && nombre_archivo == nombre_ingresado && contrasena_archivo == contrasena_ingresada) {
+        if (dni_archivo == dni_ingresado && nombre_archivo == nombre_ingresado && contrasena_archivo == contrasena_ingresada) {
             cout << "Bienvenido, " << nombre_ingresado << "! Has iniciado sesión como Personal de Mantenimiento." << endl;
             encontrado = true;
             break;
@@ -188,7 +188,7 @@ void inicio_SesionMantenimiento() {
     }
 
     if (!encontrado) {
-        cout << "Error: ID, nombre de usuario o contraseña incorrectos." << endl;
+        cout << "Error: DNI, nombre de usuario o contraseña incorrectos." << endl;
     }
 
     archivo.close();

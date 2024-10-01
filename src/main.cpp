@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <string>
-#include "login.cpp" // Incluir login.cpp
+#include "login.cpp"
 
 using namespace std;
 
@@ -44,7 +44,7 @@ void crearArchivosDefecto() {
 
 // Función para crear un usuario administrador por defecto
 void usuario_Defecto(){
-    administrador_Cond admin("Ivan","Nunez");
+    administrador_Cond admin("Ivan","Nunez",72167843);
 }
 
 int main() {

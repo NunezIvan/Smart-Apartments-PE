@@ -13,35 +13,26 @@ private:
     string apellido;
     string nom_Usuario;
     string contr_Usuario;
-    int id_Usuario;
+    int DNI;
 
 public:
-    Usuario(string _nombre, string _apellido);
+    Usuario(string _nombre, string _apellido, int DNI);
     string getNom_Usuario() const;
     string getContr_Usuario() const;
-    int getId_Usuario() const;
-    void setId_Usuario(int _id_Usuario);
+    int getDNI_Usuario() const;
     void generarNombreUsuario();
     void generarContrasena();
 };
 
-int generate_ID() {
-    return rand() % 900000000 + 100000000;
-}
-
-Usuario::Usuario(string _nombre, string _apellido) {
+Usuario::Usuario(string _nombre, string _apellido, int _DNI) {
     nombre = _nombre;
     apellido = _apellido;
-    id_Usuario = generate_ID();
+    DNI = _DNI;
 }
 
 // Getters y setters
-int Usuario::getId_Usuario() const {
-    return id_Usuario;
-}
-
-void Usuario::setId_Usuario(int _id_Usuario) {
-    id_Usuario = _id_Usuario;
+int Usuario::getDNI_Usuario() const {
+    return DNI;
 }
 
 void Usuario::generarNombreUsuario() {
@@ -59,5 +50,3 @@ string Usuario::getNom_Usuario() const {
 string Usuario::getContr_Usuario() const {
     return contr_Usuario;
 }
-
-

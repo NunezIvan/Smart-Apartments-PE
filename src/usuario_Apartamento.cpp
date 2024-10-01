@@ -10,22 +10,25 @@ private:
     string nombre;
     string apellido;
     string nombreUsuario;
-    string contraseña;
+    string contrasena;
     int nmro_apart;
     int nivel;
     string nmbr_edificio;
 
 public:
     // Constructor
-    usuario_Apartamento(string _nombre, string _apellido, int _nmro_apart, int _nivel, string nmbr_edificio): Usuario(_nombre, _apellido), nmro_apart(_nmro_apart), nivel(_nivel), nmbr_edificio(nmbr_edificio) {
+    usuario_Apartamento(string _nombre, string _apellido, int _nmro_apart, int _nivel, string nmbr_edificio, int _DNI)
+        : Usuario(_nombre, _apellido, _DNI), nmro_apart(_nmro_apart), nivel(_nivel), nmbr_edificio(nmbr_edificio) {
+        
         nombre = _nombre;
         apellido = _apellido;
         generarNombreUsuario(); 
         generarContrasena();    
 
+        // Guardar los datos del propietario en un archivo
         ofstream file("propietarios.txt", ios::app);
         if (file.is_open()) {
-            file << getId_Usuario() << ";" << getNom_Usuario() << ";" << getContr_Usuario() << ";"
+            file << getDNI_Usuario() << ";" << getNom_Usuario() << ";" << getContr_Usuario() << ";"
                  << nmro_apart << ";" << nivel << ";" << nmbr_edificio << "\n";
             file.close();
         } else {
@@ -44,6 +47,6 @@ public:
         cout << "Apellido del propietario: " << apellido << endl;
         cout << "Nombre del edificio: " << nmbr_edificio << endl;
         cout << "Nivel del apartamento: " << nivel << endl;
-        cout << "Nmro del apartamento: " << nmro_apart << endl;  // Corregido para mostrar el número correcto
+        cout << "Nmro del apartamento: " << nmro_apart << endl;
     }
 };

@@ -15,17 +15,51 @@ struct Departamento {
     int nmro_apartamento;
     int nro_nivel;
 
-    Departamento() : nmro_apartamento(0), nro_nivel(0), nmbr_edificio(""), propietario("") {}
+    Departamento(int _nmro_apartamento, int _nro_nivel, string _nmbr_edificio, string _propietario): nmro_apartamento(_nmro_apartamento), nro_nivel(_nro_nivel), nmbr_edificio(_nmbr_edificio), propietario(_propietario) {
+        ifstream archivo("departamentos.txt");
 
-    Departamento(int _nmro_apartamento, int _nro_nivel, string _nmbr_edificio, string _propietario = "")
-        : nmro_apartamento(_nmro_apartamento), nro_nivel(_nro_nivel), nmbr_edificio(_nmbr_edificio), propietario(_propietario) {}
+        if (!archivo.is_open()) {
+            cout << "El archivo no existe." << endl;
+        }
+
+        string linea;
+        int lineCount = 0;
+
+        // Contar el número de líneas en el archivo
+        while (getline(archivo, linea)) {
+            if (!linea.empty()) {  // Solo contar líneas que no estén vacías
+                lineCount++;
+            }
+        }
+
+        archivo.close();
+
+        // Si hay menos de 40 líneas, escribir en el archivo
+        if (lineCount < 40) {
+            ofstream file("departamentos.txt", ios::app);
+            if (file.is_open()) {
+                file << propietario << ";" << nmro_apartamento << ";" << nro_nivel << ";" << nmbr_edificio << "\n";
+                file.close();
+            } else {
+                cout << "No se pudo abrir el archivo para escritura." << endl;
+            }
+        } else {
+            return;
+        }
+    }
+
 
     string get_Propietario() const {
         return propietario;
     }
 
     bool tienePropietario() const {
-        return propietario.empty();
+        if(propietario == "Sin_Propietario"){
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 };
 
@@ -39,30 +73,27 @@ struct DepartamentoNodo {
 class DepartamentoLista {
 public:
     DepartamentoNodo* cabeza;
-    DepartamentoNodo* tail;
+    DepartamentoNodo* cola;
 
-    DepartamentoLista() : cabeza(nullptr), tail(nullptr) {}
-
-    ~DepartamentoLista() {
-        clear();
-    }
+    DepartamentoLista() : cabeza(nullptr), cola(nullptr) {}
 
     void insertarAlFinal(const Departamento& dept) {
         DepartamentoNodo* nuevo = new DepartamentoNodo(dept);
         if (cabeza == nullptr) {
             cabeza = nuevo;
-            tail = nuevo;
+            cola = nuevo;
         }
         else {
-            tail->siguiente = nuevo;
-            tail = nuevo;
+            cola->siguiente = nuevo;
+            cola = nuevo;
         }
+
     }
 
-    DepartamentoNodo* buscar(int numero_departamento) const {
+    DepartamentoNodo* buscar(int numero_departamento, int nro_nivel, string _nmbr_edificio) const {
         DepartamentoNodo* actual = cabeza;
         while (actual != nullptr) {
-            if (actual->data.nmro_apartamento == numero_departamento) {
+            if (actual->data.nmro_apartamento == numero_departamento && actual->data.nro_nivel==nro_nivel && actual->data.nmbr_edificio == _nmbr_edificio && actual->data.propietario == "Sin_Propietario") {
                 return actual;  // Retornar el nodo si coincide el número de departamento
             }
             actual = actual->siguiente;
@@ -78,7 +109,7 @@ public:
             delete temp;
         }
         cabeza = nullptr;
-        tail = nullptr;
+        cola = nullptr;
     }
 };
 
@@ -86,9 +117,9 @@ struct Nivel {
     int numero;
     DepartamentoLista departamentos;
 
-    Nivel(int _numero, int cantidad_departamentos) : numero(_numero) {
-        for (int i = 1; i <= cantidad_departamentos; ++i) {
-            Departamento dept(i, _numero, "");
+    Nivel(int _numero, int cantidad_departamentos, string nmbr_Edificio) : numero(_numero) {
+        for (int i = 1; i <= cantidad_departamentos; i++) {
+            Departamento dept(i, _numero,nmbr_Edificio,"Sin_Propietario");
             departamentos.insertarAlFinal(dept);
         }
     }
@@ -106,10 +137,6 @@ public:
     NivelNodo* cabeza;
 
     NivelLista() : cabeza(nullptr) {}
-
-    ~NivelLista() {
-        clear();
-    }
 
     void insertarAlFinal(const Nivel& nivel) {
         NivelNodo* nuevo = new NivelNodo(nivel);
@@ -136,15 +163,6 @@ public:
         return nullptr;  // Si no se encuentra, retornar nullptr
     }
 
-    void clear() {
-        NivelNodo* actual = cabeza;
-        while (actual != nullptr) {
-            NivelNodo* temp = actual;
-            actual = actual->siguiente;
-            delete temp;
-        }
-        cabeza = nullptr;
-    }
 };
 
 struct Edificio {
@@ -155,14 +173,10 @@ struct Edificio {
 
     Edificio(string _nombre, int _cantidad_niveles, int _departamentos_por_nivel)
         : nombre(_nombre), cantidad_niveles(_cantidad_niveles), departamentos_por_nivel(_departamentos_por_nivel) {
-        for (int i = 1; i <= cantidad_niveles; ++i) {
-            Nivel nivel(i, departamentos_por_nivel);
+        for (int i = 1; i <= cantidad_niveles; i++) {
+            Nivel nivel(i, _departamentos_por_nivel,_nombre);
             niveles.insertarAlFinal(nivel);
         }
-    }
-
-    ~Edificio() {
-        niveles.clear();
     }
 
     Departamento* obtenerDepartamento(int nivel, int numero_departamento) {
@@ -179,7 +193,7 @@ struct Edificio {
 
         // Verificar que el número de departamento esté dentro del rango esperado
         if (numero_departamento < 1 || numero_departamento > departamentos_por_nivel) {
-            return nullptr;  // Departamento fuera de rango
+            return nullptr;
         }
 
         // Retornar el puntero al departamento encontrado
@@ -198,10 +212,6 @@ public:
     EdificioNodo* cabeza;
 
     EdificioLista() : cabeza(nullptr) {}
-
-    ~EdificioLista() {
-        clear();
-    }
 
     void insertarAlFinal(const Edificio& edificio) {
         EdificioNodo* nuevo = new EdificioNodo(edificio);
@@ -236,77 +246,70 @@ public:
             return;
         }
 
-        // Mostrar los edificios disponibles
         cout << "Seleccione un edificio para ver los departamentos:\n";
-        string edificios[100];  // Asumimos que no habrá más de 100 edificios
-        int cantidadEdificios = 0;
-
-        // Recorrer los edificios y almacenarlos en el array 'edificios'
-        while (actual != nullptr) {
-            bool yaExiste = false;
-            for (int i = 0; i < cantidadEdificios; ++i) {
-                if (edificios[i] == actual->data.nmbr_edificio) {
-                    yaExiste = true;
-                    break;
-                }
-            }
-
-            if (!yaExiste) {
-                edificios[cantidadEdificios] = actual->data.nmbr_edificio;
-                ++cantidadEdificios;
-            }
-            actual = actual->siguiente;
-        }
-
-        // Imprimir las opciones del menú
-        for (int i = 0; i < cantidadEdificios; ++i) {
-            cout << i + 1 << ". " << edificios[i] << "\n";
-        }
+        cout << "1. Edificio_1\n";
+        cout << "2. Edificio_2\n";
 
         int seleccion;
         cout << "Seleccione el número de edificio: ";
         cin >> seleccion;
 
-        if (seleccion < 1 || seleccion > cantidadEdificios) {
-            cout << "Selección no válida." << endl;
-            return;
+        string edificioSeleccionado;
+        switch (seleccion) {
+            case 1:
+                edificioSeleccionado = "Edificio_1";
+                break;
+            case 2:
+                edificioSeleccionado = "Edificio_2";
+                break;
+            default:
+                cout << "Selección no válida." << endl;
+                return;
         }
 
-        string edificioSeleccionado = edificios[seleccion - 1];
-
-        // Ahora mostrar los niveles y departamentos del edificio seleccionado
         cout << "\nMostrando departamentos del edificio: " << edificioSeleccionado << "\n";
 
-        // Recorrer los niveles dentro del edificio seleccionado
+        // Recorrer y mostrar cada nivel
         for (int nivel = 1; nivel <= 5; ++nivel) {
-            bool hayDepartamentosEnNivel = false;
+            cout << "\tNivel " << nivel << ":\n";
+
+            // Lista temporal para guardar los departamentos ordenados del nivel actual
+            DepartamentoNodo* cabezaOrdenada = nullptr;
+
+            // Extraer departamentos que corresponden a este edificio y nivel
             actual = departamentosCargados.cabeza;
-
             while (actual != nullptr) {
-                // Mostrar solo los departamentos que pertenecen al edificio y nivel actual
                 if (actual->data.nmbr_edificio == edificioSeleccionado && actual->data.nro_nivel == nivel) {
-                    if (!hayDepartamentosEnNivel) {
-                        cout << "\tNivel: " << nivel << "\n";
-                        hayDepartamentosEnNivel = true;
-                    }
-
-                    // Reemplazar guiones bajos por espacios en el nombre del propietario
-                    string propietario_modificado = actual->data.propietario;
-                    for (size_t i = 0; i < propietario_modificado.length(); ++i) {
-                        if (propietario_modificado[i] == '_') {
-                            propietario_modificado[i] = ' ';
+                    // Crear un nuevo nodo para insertar en la lista ordenada
+                    DepartamentoNodo* nuevoNodo = new DepartamentoNodo(actual->data);
+                    // Insertar en la lista manteniendo el orden por número de departamento
+                    if (!cabezaOrdenada || cabezaOrdenada->data.nmro_apartamento > nuevoNodo->data.nmro_apartamento) {
+                        nuevoNodo->siguiente = cabezaOrdenada;
+                        cabezaOrdenada = nuevoNodo;
+                    } else {
+                        DepartamentoNodo* actualOrdenado = cabezaOrdenada;
+                        while (actualOrdenado->siguiente && actualOrdenado->siguiente->data.nmro_apartamento < nuevoNodo->data.nmro_apartamento) {
+                            actualOrdenado = actualOrdenado->siguiente;
                         }
+                        nuevoNodo->siguiente = actualOrdenado->siguiente;
+                        actualOrdenado->siguiente = nuevoNodo;
                     }
-
-                    // Imprimir la información del departamento
-                    cout << "\t\tDepartamento: " << actual->data.nmro_apartamento
-                        << ", Propietario: " << (propietario_modificado.empty() ? "sin propietario" : propietario_modificado) << "\n";
                 }
                 actual = actual->siguiente;
             }
 
-            if (!hayDepartamentosEnNivel) {
-                cout << "\t(No hay departamentos en el nivel " << nivel << ")\n";
+            // Imprimir los departamentos ordenados
+            actual = cabezaOrdenada;
+            while (actual != nullptr) {
+                cout << "\t\t" << actual->data.nmro_apartamento << ". Propietario: "
+                    << (actual->data.propietario.empty() ? "Sin propietario" : actual->data.propietario) << endl;
+                DepartamentoNodo* temp = actual;
+                actual = actual->siguiente;
+                delete temp;
+            }
+
+            if (!cabezaOrdenada) {
+                cout << "\t(No hay departamentos en este nivel)\n";
             }
         }
     }
