@@ -1,11 +1,14 @@
 #pragma once
 #include <iostream>
+#undef byte
+#include <windows.h>
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <algorithm>
 #include "usuario_Apartamento.cpp" 
 #include "administrador.cpp" 
+
 
 using namespace std;
 
@@ -25,16 +28,14 @@ struct Departamento {
         string linea;
         int lineCount = 0;
 
-        // Contar el número de líneas en el archivo
         while (getline(archivo, linea)) {
-            if (!linea.empty()) {  // Solo contar líneas que no estén vacías
+            if (!linea.empty()) {  
                 lineCount++;
             }
         }
 
         archivo.close();
 
-        // Si hay menos de 40 líneas, escribir en el archivo
         if (lineCount < 40) {
             ofstream file("departamentos.txt", ios::app);
             if (file.is_open()) {

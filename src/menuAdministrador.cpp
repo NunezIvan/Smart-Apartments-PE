@@ -193,7 +193,7 @@ void menuAdministrador() {
                 registrarPropietario();
                 break;
             case 3:
-                gestionControlCaja();
+                menuElegirEdificio ();
                 break;
             case 4:
                 break;
