@@ -19,6 +19,7 @@ struct egresos{
    string mes;
    string tipo_pago;
    double aporte;
+   string nombre_edificio;
 };
 
 egresos e;
@@ -123,10 +124,11 @@ void mostrarEdificios(DepartamentoLista& departamentosCargados) {
    edificios.mostrarMenuEdificios(departamentosCargados);
 }
 
+
+
 /*GESTION DE CONTROL DE CAJA*/
 
-
-void aporte(const string& mes, const string& tipo, const string& tipo_pago){
+void aporte(const string& mes, const string& edificio, const string& tipo, const string& tipo_pago){
    ofstream archivo("egresos.txt", ios::app);
    if (archivo.fail()) {
       cout << " ..." << endl;
@@ -157,7 +159,7 @@ void aporte(const string& mes, const string& tipo, const string& tipo_pago){
    archivo.close();
 }
 
-void aporteBasico (const string& mes, const string& tipo, const string& tipo_pago){
+void aporteBasico (const string& mes, const string& edificio, const string& tipo, const string& tipo_pago){
    ofstream archivo("egresos.txt", ios::app);
    if (archivo.fail()) {
       cout << " ..." << endl;
@@ -179,8 +181,71 @@ void aporteBasico (const string& mes, const string& tipo, const string& tipo_pag
    archivo.close();
 }
 
-void menuTipoPago(const string& mes, const string& tipo){
-   string temp_mes=mes, temp_tipo=tipo;
+void registrarConsumoAgua (const string& mes, const string& edificio, const string& tipo, const string& tipo_pago){
+   ofstream archivo("egresos.txt", ios::app);
+   if (archivo.fail()) {
+      cout << " ..." << endl;
+      Sleep(1500);
+      cout << " ERROR, ARCHIVO NO ENCONTRADO" << endl;
+      exit(1);
+   }
+   e.mes =mes;
+   e.tipo = tipo;
+   e.tipo_pago=tipo_pago;
+
+   const float CARGO_FIJO=6.26, IGV=0.18, VOLUMEN=2.02, SERVICIO_ALCANTARILLADO=1.26;
+   float lec_actual, lec_anterior;
+   float consumo_agua_m3=0, subtotal=0, subtotal_desague=0,total=0, total_igv=0;
+   cout<<" Ingrese la lectura anterior: "; cin>>lec_anterior;
+   cout<<" Ingrese la lectura actual: "; cin>>lec_actual;
+
+   consumo_agua_m3=lec_actual-lec_anterior;
+   subtotal=consumo_agua_m3*VOLUMEN;
+   subtotal_desague=consumo_agua_m3*SERVICIO_ALCANTARILLADO;
+   total_igv=(subtotal+subtotal_desague+CARGO_FIJO)*IGV;
+   total=subtotal+subtotal_desague+CARGO_FIJO+total_igv;
+   e.aporte=total;
+
+   cout<<endl;
+   cout<<endl;
+   cout << "--------------------------------------------------------------------------------------------------------------------" << endl;
+   cout << left <<"| "<< "Egresos de "<<setw(102) <<e.mes; ;cout<<"| "<<endl;
+   cout << "--------------------------------------------------------------------------------------------------------------------" << endl;
+   cout << left <<"| "<<setw(6) << " " ;cout<<"|";
+   cout<< setw(12) << "Lec. actual" ; cout<<" |";
+   cout<< setw(14) << "Lec. anterior" ; cout<<" |";
+   cout<< setw(6) << "c. m^3" ; cout<<" |";
+   cout<< setw(4) << "F" ; cout<<" |";
+   cout<< setw(8) << "Subtotal" ; cout<<" |";
+   cout<< setw(4) << "F" ; cout<<" |";
+   cout<< setw(9) << "Subtotal" ; cout<<" |";
+   cout<< setw(10) << "Cargo Fijo" ; cout<<" |";
+   cout<< setw(11) << "Total IGV" ; cout<<" |";
+   cout<< setw(9) << "Total" ; cout<<" |";
+   cout<<endl;
+   cout << "--------------------------------------------------------------------------------------------------------------------" << endl;
+   cout << left <<"|"<<setw(7) << "Datos" ;cout<<"|";
+   cout<<setw(12) << lec_actual ; cout<<" |";
+   cout<< setw(14) << lec_anterior ; cout<<" |";
+   cout<< setw(6) << consumo_agua_m3 ; cout<<" |";
+   cout<< setw(4) << VOLUMEN ; cout<<" |";
+   cout<< "s/"<<setw(6) << subtotal ; cout<<" |";
+   cout<< setw(4) << SERVICIO_ALCANTARILLADO ; cout<<" |";
+   cout<< "s/"<<setw(7) << subtotal_desague ; cout<<" |";
+   cout<<"s/"<< setw(8) << CARGO_FIJO ; cout<<" |";
+   cout<<"s/"<< setw(9) <<  total_igv ; cout<<" |";
+   cout<< "s/"<<setw(5) << total ; cout<<" |";
+   cout<<endl;
+   cout << "--------------------------------------------------------------------------------------------------------------------" << endl;
+
+   archivo << e.tipo<<";"<<e.mes<<";"<<e.tipo_pago<<";"<<e.aporte<< endl;
+   cout << endl;
+   system("pause");
+   archivo.close();
+}
+
+void menuTipoPago(const string& mes, const string& edificio, const string& tipo){
+   string temp_mes=mes, temp_edificio=edificio, temp_tipo=tipo;
    char r2 = ' ';
    do {
       system("CLS");
@@ -204,9 +269,11 @@ void menuTipoPago(const string& mes, const string& tipo){
          case '1':
             system("CLS");
             if(temp_tipo=="Limpieza"){
-               aporte(temp_mes, temp_tipo, "Transferencia Bancaria");
+               aporte(temp_mes, temp_edificio, temp_tipo, "Transferencia Bancaria");
+            } else if(temp_tipo=="Pago Agua"){
+               registrarConsumoAgua (temp_mes, temp_edificio, temp_tipo, "Transferencia Bancaria");
             } else {
-               aporteBasico (temp_mes, temp_tipo, "Transferencia Bancaria");
+               aporteBasico (temp_mes, temp_edificio, temp_tipo, "Transferencia Bancaria");
             }
 
             break;
@@ -214,35 +281,43 @@ void menuTipoPago(const string& mes, const string& tipo){
          case '2':
             system("CLS");
             if(temp_tipo=="Limpieza"){
-               aporte(temp_mes, temp_tipo, "por Yape");
-            }else {
-               aporteBasico (temp_mes, temp_tipo, "por Yape");
+               aporte(temp_mes, temp_edificio, temp_tipo, "por Yape");
+            } else if(temp_tipo=="Pago Agua"){
+               registrarConsumoAgua (temp_mes, temp_edificio, temp_tipo, "por Yape");
+            } else {
+               aporteBasico (temp_mes, temp_edificio, temp_tipo, "por Yape");
             }
 
             break;
          case '3':
             system("CLS");
             if(temp_tipo=="Limpieza"){
-               aporte(temp_mes, temp_tipo, "en Efectivo");
-            }else {
-               aporteBasico (temp_mes, temp_tipo, "en Efectivo");
+               aporte(temp_mes, temp_edificio, temp_tipo, "en Efectivo");
+            } else if(temp_tipo=="Pago Agua"){
+               registrarConsumoAgua (temp_mes, temp_edificio, temp_tipo, "en Efectivo");
+            } else {
+               aporteBasico (temp_mes, temp_edificio, temp_tipo, "en Efectivo");
             }
             break;
          case '4':
             system("CLS");
             if(temp_tipo=="Limpieza"){
-               aporte(temp_mes, temp_tipo, "en BCP");
-            }else {
-               aporteBasico (temp_mes, temp_tipo, "en BCP");
+               aporte(temp_mes, temp_edificio, temp_tipo, "en BCP");
+            } else if(temp_tipo=="Pago Agua"){
+               registrarConsumoAgua (temp_mes, temp_edificio, temp_tipo, "en BCP");
+            } else {
+               aporteBasico (temp_mes, temp_edificio, temp_tipo, "en BCP");
             }
             break;
 
          case '5':
             system("CLS");
             if(temp_tipo=="Limpieza"){
-               aporte(temp_mes, temp_tipo, "Via Web");
-            }else {
-               aporteBasico (temp_mes, temp_tipo, "Via Web");
+               aporte(temp_mes, temp_edificio, temp_tipo, "Via Web");
+            }else if(temp_tipo=="Pago Agua"){
+               registrarConsumoAgua (temp_mes, temp_edificio, temp_tipo, "Via Web");
+            } else {
+               aporteBasico (temp_mes, temp_edificio, temp_tipo, "Via Web");
             }
             break;
 
@@ -256,8 +331,8 @@ void menuTipoPago(const string& mes, const string& tipo){
    } while (r2 != '0');
 }
 
-void menuMantenimiento(const string& mes){
-   string temp_mes=mes;
+void menuMantenimiento(const string& mes, const string& edificio){
+   string temp_mes=mes, temp_edificio=edificio;
    char r1 = ' ';
    do {
       system("CLS");
@@ -279,20 +354,20 @@ void menuMantenimiento(const string& mes){
 
          case '1':
             system("CLS");
-            menuTipoPago(temp_mes,"Mante. Ascensor");
+            menuTipoPago(temp_mes, temp_edificio,"Mante. Ascensor");
             break;
 
          case '2':
             system("CLS");
-            menuTipoPago(temp_mes,"Mante. Equipos Electricos");
+            menuTipoPago(temp_mes, temp_edificio,"Mante. Equipos Electricos");
             break;
          case '3':
             system("CLS");
-            menuTipoPago(temp_mes,"Mante. Pintura");
+            menuTipoPago(temp_mes, temp_edificio,"Mante. Pintura");
             break;
          case '4':
             system("CLS");
-            menuTipoPago(temp_mes,"Mante. Area Verdes");
+            menuTipoPago(temp_mes, temp_edificio,"Mante. Area Verdes");
             break;
 
          default:
@@ -304,8 +379,8 @@ void menuMantenimiento(const string& mes){
    } while (r1 != '0');
 }
 
-void menuTipoEgresos(const string& mes){
-   string temp_mes=mes;
+void menuTipoEgresos(const string& mes, const string& edificio){
+   string temp_mes=mes, temp_edificio=edificio;
    char r1 = ' ';
    do {
       system("CLS");
@@ -313,14 +388,12 @@ void menuTipoEgresos(const string& mes){
       cout << " ******TIPO DE EGRESOS******" << endl;
       cout<<endl;
       cout<<" 1.- LIMPIEZA"<<endl;
-      cout<<" 2.- PAGO DE ELECTRICIDAD "<<endl;
-      cout<<" 3.- PAGO DEL AGUA"<<endl;
-      cout<<" 4.- MANTENIMIENTO "<<endl;
-      cout<<" 5.- PAGO A SEGURIDAD"<<endl;
-      cout<<" 6.- PAGO ADMINISTRADORES"<<endl;
-      cout<<" 7.- TOKEN FISICO"<<endl;
-      cout<<" 8.- IMPUESTO ITF"<<endl;
-      cout<<" 9.- COMISIONES BANCARIA"<<endl;
+      cout<<" 2.- MANTENIMIENTO "<<endl;
+      cout<<" 3.- PAGO A SEGURIDAD"<<endl;
+      cout<<" 4.- PAGO ADMINISTRADORES"<<endl;
+      cout<<" 5.- TOKEN FISICO"<<endl;
+      cout<<" 6.- IMPUESTO ITF"<<endl;
+      cout<<" 7.- COMISIONES BANCARIA"<<endl;
       cout << " 0.- Salir" << endl;
       cout << " Elija una opcion: ";
       cin >> r1;
@@ -332,41 +405,33 @@ void menuTipoEgresos(const string& mes){
 
          case '1':
             system("CLS");
-            menuTipoPago(temp_mes,"Limpieza");
+            menuTipoPago(temp_mes, temp_edificio,"Limpieza");
             break;
 
          case '2':
             system("CLS");
-            menuTipoPago(temp_mes,"Pago Luz");
+            menuMantenimiento(temp_mes, temp_edificio);// habra otro menu para diversos tipos de mantenimiento
             break;
+
          case '3':
             system("CLS");
-            menuTipoPago(temp_mes,"Pago Agua");
+            menuTipoPago(temp_mes, temp_edificio,"Pago Seguridad");
             break;
          case '4':
             system("CLS");
-            menuMantenimiento(temp_mes);// habra otro menu para diversos tipos de mantenimiento
+            menuTipoPago(temp_mes, temp_edificio,"Pago Administradores");
             break;
-
          case '5':
             system("CLS");
-            menuTipoPago(temp_mes,"Pago Seguridad");
+            menuTipoPago(temp_mes, temp_edificio,"Token físico para pagos (BCP)");
             break;
          case '6':
             system("CLS");
-            menuTipoPago(temp_mes,"Pago Administradores");
+            menuTipoPago(temp_mes, temp_edificio,"Impuesto ITF (por ley)");
             break;
          case '7':
             system("CLS");
-            menuTipoPago(temp_mes,"Token físico para pagos (BCP)");
-            break;
-         case '8':
-            system("CLS");
-            menuTipoPago(temp_mes,"Impuesto ITF (por ley)");
-            break;
-         case '9':
-            system("CLS");
-            menuTipoPago(temp_mes,"Comisión por ventanilla BCP");
+            menuTipoPago(temp_mes, temp_edificio,"Comisión por ventanilla BCP");
             break;
 
 
@@ -379,6 +444,7 @@ void menuTipoEgresos(const string& mes){
    } while (r1 != '0');
 }
 
+/*   TABLA   */
 int espacioTabla(const string& _tipo, const string& _mes){
 
    string concatenado = _tipo + _mes;
@@ -395,7 +461,8 @@ int espacioTabla2(const string& _tipo, const string& _mes,const string& _dia,con
    return a;
 }
 
-void mostrarEgresos(const string& mes){
+void mostrarEgresos(const string& mes, const string& edificio){
+/*   FIN TABLA   */
    ifstream archivo("egresos.txt", ios::in);
    if (!archivo.is_open()) {
       cout << "Error al abrir el archivo de administradores." << endl;
@@ -581,9 +648,47 @@ void mostrarEgresos(const string& mes){
    archivo.close();
 } //fin mostrarEgresos
 
-void menuControlDeCaja(const string& mes){
+void menuConsumo(const string& mes, const string& edificio){
+    string temp_mes=mes, temp_edificio=edificio;
+   char r1 = ' ';
+   do {
+      system("CLS");
+      cout << endl;
+      cout << " ******REGISTRO DE CONSUMO******" << endl;
+      cout<<endl;
+      cout<<" 1.- CONSUMO DE AGUA"<<endl;
+      cout<<" 2.- CONSUMO DE LUZ"<<endl;
+      cout << " 0.- Salir" << endl;
+      cout << " Elija una opcion: ";
+      cin >> r1;
+
+      switch (r1) {
+         case '0':
+            return;
+            break;
+
+         case '1':
+            system("CLS");
+            menuTipoPago(temp_mes, temp_edificio,"Pago Agua" );
+            break;
+
+         case '2':
+            system("CLS");
+            menuTipoPago(temp_mes, temp_edificio,"Pago Luz" );
+            break;
+
+         default:
+            cout << "Opcion invalida. Intente nuevamente." << endl;
+            break;
+      }
+      cout<<endl;
+   system("CLS");
+   } while (r1 != '0');
+}
+
+void menuControlDeCaja(const string& mes, const string& edificio){
    char r = ' ';
-   string temp_mes=mes;
+   string temp_mes=mes, temp_edificio=edificio;
    do {
       system("CLS");
       cout << endl;
@@ -591,9 +696,10 @@ void menuControlDeCaja(const string& mes){
       cout<<endl;
       cout<<" 1.- REGISTRO DE EGRESOS"<<endl;
       cout<<" 2.- VER EGRESOS"<<endl;
-      cout<<" 3.- REGISTRO DE INGRESOS"<<endl;
-      cout<<" 4.- VER INGRESOS"<<endl;
-      cout<<" 5.- VER BALANCE"<<endl;
+      cout<<" 3.- REGISTRO DE CONSUMO"<<endl;
+      cout<<" 4.- REGISTRO DE INGRESOS"<<endl;
+      cout<<" 5.- VER INGRESOS"<<endl;
+      cout<<" 6.- VER BALANCE"<<endl;
       cout << " 0.- Salir" << endl;
       cout << " Elija una opcion: ";
       cin >> r;
@@ -605,17 +711,17 @@ void menuControlDeCaja(const string& mes){
 
          case '1':
             system("CLS");
-            menuTipoEgresos(temp_mes);
+            menuTipoEgresos(temp_mes, temp_edificio);
             break;
 
          case '2':
             system("CLS");
-            mostrarEgresos(temp_mes);
+            mostrarEgresos(temp_mes, temp_edificio);
             break;
 
          case '3':
             system("CLS");
-
+            menuConsumo(temp_mes, temp_edificio);
             break;
 
          case '4':
@@ -637,8 +743,9 @@ void menuControlDeCaja(const string& mes){
    } while (r != '0');
 }
 
-void gesitonControlCaja(){
-   char opcion;
+void menuMeses(const string& edificio){
+   string temp_edificio=edificio;
+    char opcion;
    do{
       system("CLS");
 
@@ -670,67 +777,67 @@ void gesitonControlCaja(){
             exit(0);
          }
          case 'a':{
-            menuControlDeCaja("Enero");
+            menuControlDeCaja("Enero", temp_edificio);
             break;
          }
          case 'b':{
             system("CLS");
-            menuControlDeCaja("Febrero");
+            menuControlDeCaja("Febrero", temp_edificio);
             break;
          }
          case 'c':{
             system("CLS");
-            menuControlDeCaja("Marzo");
+            menuControlDeCaja("Marzo", temp_edificio);
 
             break;
          }
          case 'd':{
             system("CLS");
-            menuControlDeCaja("Abril");
+            menuControlDeCaja("Abril", temp_edificio);
 
             break;
          }
          case 'e':{
             system("CLS");
-            menuControlDeCaja("Mayo");
+            menuControlDeCaja("Mayo", temp_edificio);
             break;
          }
          case 'f':{
             system("CLS");
-            menuControlDeCaja("Junio");
+            menuControlDeCaja("Junio", temp_edificio);
             break;
          }
          case 'g':{
             system("CLS");
-            menuControlDeCaja("Julio");
+            menuControlDeCaja("Julio", temp_edificio);
             break;
          }
          case 'h':{
             system("CLS");
-            menuControlDeCaja("Agosto");
+            menuControlDeCaja("Agosto", temp_edificio);
             break;
          }
          case 'i':{
             system("CLS");
-            menuControlDeCaja("Septiembre");
+            menuControlDeCaja("Septiembre", temp_edificio);
 
             break;
          }
          case 'j':{
             system("CLS");
-            menuControlDeCaja("Octubre");
+            menuControlDeCaja("Octubre", temp_edificio);
 
             break;
          }
          case 'k':{
             system("CLS");
-            menuControlDeCaja("Noviembre");
+            menuControlDeCaja("Noviembre", temp_edificio);
 
             break;
          }
          case 'l':{
             system("CLS");
-            menuControlDeCaja("Diciembre");
+            menuControlDeCaja("Diciembre", temp_edificio);
 
             break;
          }
@@ -742,6 +849,46 @@ void gesitonControlCaja(){
       cout<<endl;
    }while (opcion != '0');
 }
+
+void menuElegirEdificio (){
+  char r = ' ';
+   do {
+      system("CLS");
+      cout << endl;
+      cout << " ******ELEGIR EDIFICIO******" << endl;
+      cout<<endl;
+      cout<<" 1.- EDIFICIO 1"<<endl;
+      cout<<" 2.- EDIFICIO 2"<<endl;
+      cout << " 0.- Salir" << endl;
+      cout << " Elija una opcion: ";
+      cin >> r;
+
+      switch (r) {
+         case '0':
+            return;
+            break;
+
+         case '1':
+            system("CLS");
+            menuMeses("Edificio 1");
+            break;
+
+         case '2':
+            system("CLS");
+            menuMeses("Edificio 2");
+            break;
+
+
+         default:
+            cout << "Opcion invalida. Intente nuevamente." << endl;
+            break;
+      }
+      cout<<endl;
+   system("CLS");
+   } while (r != '0');
+}
+
+
 
 void menuAdministrador() {
     Edificio edificio1("Edificio_1", 5, 4);
@@ -768,7 +915,8 @@ void menuAdministrador() {
                 registrarPropietario();
                 break;
             case 3:
-               gesitonControlCaja();
+               /*Control de caja*/
+               menuElegirEdificio ();
                 break;
             default:
                 cout << "Opción no válida.\n";

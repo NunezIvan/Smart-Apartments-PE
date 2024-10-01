@@ -9,13 +9,13 @@ class administrador_Cond : public Usuario {
         string nombre;
         string apellido;
         string nombreUsuario;
-        string contraseña;
+        string contrasena;
     public:
         administrador_Cond(string _nombre, string _apellido):Usuario(_nombre,_apellido){
             nombre = _nombre;
             apellido = _apellido;
-            generarNombreUsuario(); 
-            generarContrasena(); 
+            generarNombreUsuario();
+            generarContrasena();
             ofstream file("administradores.txt", ios::app);
                 if (file.is_open()) {
                     file << getId_Usuario() << ";" << getNom_Usuario() << ";" << getContr_Usuario() <<"\n";
