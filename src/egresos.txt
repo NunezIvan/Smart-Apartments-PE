@@ -1,23 +1,4 @@
-Pago Agua;Enero;Via Web;648
-Limpieza;Aaron;04;Enero;por Yape;60
-Limpieza;Aaron;06;Enero;por Yape;60
-Limpieza;Aaron;11;Enero;por Yape;60
-Limpieza;Aaron;15;Enero;por Yape;60
-Limpieza;Aaron;20;Enero;por Yape;60
-Limpieza;Aaron;21;Enero;Transferencia Bancaria;60
-Limpieza;Aaron;22;Enero;Transferencia Bancaria;60
-Limpieza;Aaron;23;Enero;en Efectivo;60
-Limpieza;Aaron;24;Enero;en BCP;60
-Limpieza;Aaron;26;Enero;Via Web;60
-Limpieza;Aaron;26;Enero;en Efectivo;60
-Limpieza;Aaron;27;Enero;en BCP;60
-Limpieza;Aaron;28;Enero;Via Web;60
-Pago Luz;Enero;Via Web;780
-Mante. Pintura;Enero;por Yape;50
-Mante. Area Verdes;Enero;por Yape;40
-Pago Seguridad;Enero;Transferencia Bancaria;1100
-Pago Administradores;Enero;Transferencia Bancaria;6600
-Limpieza;godofredo;4;Enero;por Yape;60
-Limpieza;olga;06;Enero;en Efectivo;1564
-Pago Agua;Enero;Via Web;1000Pago Administradores;Diciembre;Transferencia Bancaria;12000
-Limpieza;aaron;06;Diciembre;Transferencia Bancaria;10000
+Limpieza;Aaron;1;Enero;Transferencia Bancaria;40;Edificio_1
+Limpieza;Ronnie;10;Enero;por Yape;1;Edificio_2
+Limpieza;Cifilis;11;Enero;por Yape;0;Edificio_2
+Pago Agua;Enero;Transferencia Bancaria;839.523;Edificio_1

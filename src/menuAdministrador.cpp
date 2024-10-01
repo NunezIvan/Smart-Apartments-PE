@@ -129,6 +129,7 @@ void mostrarEdificios(DepartamentoLista& departamentosCargados) {
 /*GESTION DE CONTROL DE CAJA*/
 
 void aporte(const string& mes, const string& edificio, const string& tipo, const string& tipo_pago){
+   string temp_edificio = edificio;
    ofstream archivo("egresos.txt", ios::app);
    if (archivo.fail()) {
       cout << " ..." << endl;
@@ -138,12 +139,14 @@ void aporte(const string& mes, const string& edificio, const string& tipo, const
    }
 
    char z;
+   e.nombre_edificio=temp_edificio;
    e.mes =mes;
    e.tipo = tipo;
    e.tipo_pago=tipo_pago;
 
    do {
       fflush(stdin);
+      cin.ignore();
       cout << endl;
       cout << " Nombre del personal de limpieza: ";
       getline(cin, e.descrip);
@@ -152,7 +155,7 @@ void aporte(const string& mes, const string& edificio, const string& tipo, const
 
       cout << " Desea agregar otro dia de servicio de limpieza(s/n): "; cin >> z;
 
-      archivo << e.tipo<<";"<<e.descrip<<";"<<e.dia<<";"<<e.mes<<";"<<e.tipo_pago<<";"<<e.aporte<< endl;
+      archivo << e.tipo<<";"<<e.descrip<<";"<<e.dia<<";"<<e.mes<<";"<<e.tipo_pago<<";"<<e.aporte<<";"<<e.nombre_edificio<< endl;
    } while (z == 's' || z == 'S');
    cout << endl;
    system("pause");
@@ -161,6 +164,7 @@ void aporte(const string& mes, const string& edificio, const string& tipo, const
 
 void aporteBasico (const string& mes, const string& edificio, const string& tipo, const string& tipo_pago){
    ofstream archivo("egresos.txt", ios::app);
+   string temp_edificio = edificio;
    if (archivo.fail()) {
       cout << " ..." << endl;
       Sleep(1500);
@@ -168,13 +172,15 @@ void aporteBasico (const string& mes, const string& edificio, const string& tipo
       exit(1);
    }
    char z;
+   e.nombre_edificio=temp_edificio;
    e.mes =mes;
    e.tipo = tipo;
    e.tipo_pago=tipo_pago;
    fflush(stdin);
+   cin.ignore();
    cout << endl;
    cout << " Ingrese el aporte: "; cin >> e.aporte;
-   archivo << e.tipo<<";"<<e.mes<<";"<<e.tipo_pago<<";"<<e.aporte<< endl;
+   archivo << e.tipo<<";"<<e.mes<<";"<<e.tipo_pago<<";"<<e.aporte<<";"<<e.nombre_edificio<< endl;
    cout << endl;
 
    system("pause");
@@ -183,12 +189,14 @@ void aporteBasico (const string& mes, const string& edificio, const string& tipo
 
 void registrarConsumoAgua (const string& mes, const string& edificio, const string& tipo, const string& tipo_pago){
    ofstream archivo("egresos.txt", ios::app);
+   string temp_edificio = edificio;
    if (archivo.fail()) {
       cout << " ..." << endl;
       Sleep(1500);
       cout << " ERROR, ARCHIVO NO ENCONTRADO" << endl;
       exit(1);
    }
+   e.nombre_edificio = temp_edificio;
    e.mes =mes;
    e.tipo = tipo;
    e.tipo_pago=tipo_pago;
@@ -238,7 +246,7 @@ void registrarConsumoAgua (const string& mes, const string& edificio, const stri
    cout<<endl;
    cout << "--------------------------------------------------------------------------------------------------------------------" << endl;
 
-   archivo << e.tipo<<";"<<e.mes<<";"<<e.tipo_pago<<";"<<e.aporte<< endl;
+   archivo << e.tipo<<";"<<e.mes<<";"<<e.tipo_pago<<";"<<e.aporte<<";"<<e.nombre_edificio<< endl;
    cout << endl;
    system("pause");
    archivo.close();
@@ -468,7 +476,7 @@ void mostrarEgresos(const string& mes, const string& edificio){
       cout << "Error al abrir el archivo de administradores." << endl;
       return;
    }
-
+   string temp_edificio = edificio;
    string temp_mes=mes;
    string linea;
    double aporteTotalTransaccion=0, aporteTotalYape=0, aporteTotaEfectivo=0,aporteTotalBcp=0, aporteTotalWeb=0;
@@ -492,7 +500,7 @@ void mostrarEgresos(const string& mes, const string& edificio){
    while (getline(archivo, linea)) {
 
       stringstream ss(linea);
-      string _tipo, _descrip, _dia, _mes, _tipoPago, _aporte ;
+      string _tipo, _descrip, _dia, _mes, _tipoPago, _aporte , _nombreEdificio;
       getline(ss, _tipo, ';');
 
       if(_tipo=="Limpieza"){
@@ -501,9 +509,11 @@ void mostrarEgresos(const string& mes, const string& edificio){
          getline(ss, _mes, ';');
          getline(ss, _tipoPago, ';');
          getline(ss, _aporte, ';');
+         getline(ss, _nombreEdificio, ';');
          e.aporte = stod(_aporte);
+         e.nombre_edificio = _nombreEdificio;
 
-         if(temp_mes == _mes){
+         if(temp_mes == _mes && temp_edificio == _nombreEdificio){
             cout <<"| "<< _tipo<<" "<<_descrip<<" "<<_dia<<" "<<_mes<< left << setw(28-espacioTabla2(_tipo, _mes,_dia,_descrip)) << " " ; cout<<"|";
             if(_tipoPago=="Transferencia Bancaria"){
 
@@ -565,17 +575,19 @@ void mostrarEgresos(const string& mes, const string& edificio){
    while (getline(archivo, linea)) {
 
       stringstream ss(linea);
-      string _tipo, _mes, _tipoPago, _aporte ;
+      string _tipo, _mes, _tipoPago, _aporte, _nombreEdificio;
       getline(ss, _tipo, ';');
 
       if(_tipo!="Limpieza"){
          getline(ss, _mes, ';');
          getline(ss, _tipoPago, ';');
          getline(ss, _aporte, ';');
+         getline(ss, _nombreEdificio, ';');
 
          e.aporte = stod(_aporte);
+         e.nombre_edificio = _nombreEdificio;
 
-         if(temp_mes == _mes){
+         if(temp_mes == _mes && temp_edificio == _nombreEdificio ){
             cout <<"| "<< _tipo<<"-"<<_mes<< setw(28-espacioTabla(_tipo,_mes)) << " " ; cout<<"|";
             if(_tipoPago=="Transferencia Bancaria"){
 
@@ -773,9 +785,9 @@ void menuMeses(const string& edificio){
       fflush(stdin);
 
       switch (opcion) {
-         case '0':{
-            exit(0);
-         }
+         case '0':
+            return;
+            break;
          case 'a':{
             menuControlDeCaja("Enero", temp_edificio);
             break;
@@ -870,12 +882,12 @@ void menuElegirEdificio (){
 
          case '1':
             system("CLS");
-            menuMeses("Edificio 1");
+            menuMeses("Edificio_1");
             break;
 
          case '2':
             system("CLS");
-            menuMeses("Edificio 2");
+            menuMeses("Edificio_2");
             break;
 
 
