@@ -4,6 +4,8 @@
 #include <sstream>
 #include <limits>
 #include <iomanip>
+#include "Cuotas.cpp"
+#include "ingresos.cpp"
 
 using namespace std;
 
@@ -601,9 +603,12 @@ void menuControlDeCaja(const string& mes, const string& edificio){
       cout<<" 1.- REGISTRO DE EGRESOS"<<endl;
       cout<<" 2.- VER EGRESOS"<<endl;
       cout<<" 3.- REGISTRO DE CONSUMO"<<endl;
-      cout<<" 4.- REGISTRO DE INGRESOS"<<endl;
-      cout<<" 5.- VER INGRESOS"<<endl;
-      cout<<" 6.- VER BALANCE"<<endl;
+      cout<<" 4.- INGRESAR CUOTA GENERAL"<<endl;
+      cout<<" 5.- VER CUOTA GENERAL"<<endl;
+      cout<<" 6.- VER CUOTAS UNICAS"<<endl;
+      cout<<" 7.- REGISTRO DE INGRESOS"<<endl;
+      cout<<" 8.- VER INGRESOS"<<endl;
+      cout<<" 9.- VER BALANCE"<<endl;
       cout << " 0.- Salir" << endl;
       cout << " Elija una opcion: ";
       cin >> r;
@@ -630,14 +635,25 @@ void menuControlDeCaja(const string& mes, const string& edificio){
 
          case '4':
             system("CLS");
-
+            calcularCuotaGeneral(temp_mes,temp_edificio);
             break;
 
          case '5':
             system("CLS");
-
+            mostrarCuotasGenerales();
             break;
-
+         case '6':
+            system("CLS");
+            mostrarCuotasEspecificas();
+            break;
+         case '7':
+            system("CLS");
+            pagoCuota(temp_mes,temp_edificio);
+            break;
+         case '8':
+            system("CLS");
+            mostrarIngresos();
+            break;
          default:
             cout << "Opcion invalida. Intente nuevamente." << endl;
             break;

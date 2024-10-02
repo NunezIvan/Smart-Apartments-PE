@@ -91,7 +91,7 @@ public:
 
     }
 
-    DepartamentoNodo* buscar(int numero_departamento, int nro_nivel, string _nmbr_edificio) const {
+    DepartamentoNodo* verificarPropietario(int numero_departamento, int nro_nivel, string _nmbr_edificio) const {
         DepartamentoNodo* actual = cabeza;
         while (actual != nullptr) {
             if (actual->data.nmro_apartamento == numero_departamento && actual->data.nro_nivel==nro_nivel && actual->data.nmbr_edificio == _nmbr_edificio && actual->data.propietario == "Sin_Propietario") {

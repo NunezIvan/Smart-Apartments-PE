@@ -6,6 +6,8 @@
 #include "menuAdministrador.cpp" 
 #include "administrador.cpp" 
 #include "usuario_Apartamento.cpp" 
+#include "Cuotas.cpp"
+#include "ingresos.cpp"
 
 using namespace std;
 
@@ -16,6 +18,61 @@ extern EdificioLista edificios;
 void limpiarBuffer() {
     cin.clear();
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
+}
+
+void menuUsuario(string edificioNombre, string nivel_str, string nmro_apart_str){
+    int menu;
+    cuotas cuota;
+    listaCuota lista;
+
+    ifstream archivo("cuotas_Personales.txt", ios::in);
+    if(archivo.fail()){
+        cout<<"Error, no se pudo cargar el archivo, cerrando programa"<<endl;
+        exit(1);
+    }
+
+    //Luego se creará una  función cargar montos a lista
+    string montostr;
+    string linea;
+    while(getline(archivo, linea)){
+
+        string nopagadostr;
+        stringstream ss(linea);
+        getline(ss,cuota.Cuota,';');
+        getline(ss,cuota.mes,';');
+        getline(ss,montostr,';');
+        getline(ss,cuota.edificio,';');
+        getline(ss,cuota.nivel,';');
+        getline(ss,cuota.apartamento,';');
+        getline(ss,nopagadostr,';');
+
+        cuota.monto= stof(montostr);
+
+        cuota.nopagado = (nopagadostr == "true");
+
+        lista.agregarFinal(cuota);
+    }
+    archivo.close();
+
+    do{
+    cout<<"1. Ver cuotas sin pagar"<<endl; 
+    cout<<"0. Salir"<<endl;
+    cin>>menu; 
+    switch(menu){
+        case 1: {
+            lista.verCuotasPersonales(edificioNombre,nivel_str,nmro_apart_str);
+            break;
+        }
+        case 0:{
+            cout<<"Adios"<<endl;
+            return;
+        }
+        default :{
+            cout<<"Entrada invalida"<<endl;
+        }
+    }
+
+    }while(menu<0 && menu>1); 
 }
 
 // Función para el inicio de sesión de Propietario
@@ -68,12 +125,14 @@ void inicio_SesionPropietario() {
             cout << "Bienvenido, " << nombre_ingresado << "! Has iniciado sesión como Propietario." << endl;
             cout << "Edificio: " << edificioNombre << ", Nivel: " << nivel_str << ", Apartamento: " << nmro_apart_str << endl;
             encontrado = true;
+            menuUsuario(edificioNombre,nivel_str,nmro_apart_str);
             break;
         }
     }
 
     if (!encontrado) {
         cout << "Error: DNI, nombre de usuario o contraseña incorrectos." << endl;
+        exit(1);
     }
 
     archivo.close();
