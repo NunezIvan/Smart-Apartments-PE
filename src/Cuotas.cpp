@@ -4,11 +4,9 @@
 #include <fstream>
 #include <vector>
 #include <sstream>
-#include <limits> // Para numeric_limits
 
 using namespace std;
 
-// Declaración de estructuras y clases
 struct cuotas {
     string Cuota; 
     string mes;
@@ -42,16 +40,14 @@ class listaCuota {
         ~listaCuota();
 };
 
-// Declaración de las funciones
-void calcularCuotaGeneral();
+void calcularCuotaGeneral(string mes, string edificio);
 void calcularCuotaEspecifica(string& _mes, string& _edificios, int& _cantidadPersonas, float& _montoGen);
 int calcularMontoGeneral(float& monto, string& mes, string& edificio);
-void mostrarCuotasGenerales();
+void mostrarCuotasGenerales(string _mes, string edificio_mn);
 void mostrarCuotasEspecificas();
 int busquedaContador(int& contador);
 vector<string> split(const string& str, char delim);
 
-// Definición de métodos de clase
 void listaCuota::agregarFinal(cuotas data) {
     nodoCuota* nuevoNodo = new nodoCuota(data);
 
@@ -100,10 +96,7 @@ void listaCuota::mostrarCuotas() {
         temp = temp->siguiente;
     }
 
-    // Limpiar el buffer y esperar a que el usuario presione Enter
-    cout << "Presione cualquier tecla para continuar..." << endl;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    cin.get();
+    system("pause");
 }
 
 void listaCuota::verCuotasPersonales(string& edificio, string& nivel, string& apartamento) {
@@ -123,10 +116,7 @@ void listaCuota::verCuotasPersonales(string& edificio, string& nivel, string& ap
         temp = temp->siguiente;
     }
 
-    // Limpiar el buffer y esperar a que el usuario presione Enter
-    cout << "Presione cualquier tecla para continuar..." << endl;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    cin.get();
+    system("pause");
 }
 
 void listaCuota::compararCuotas(string& _mes, string& edificio, string& nivel, string& apartamento, bool& encontrado, float& monto) {
@@ -149,10 +139,7 @@ void listaCuota::compararCuotas(string& _mes, string& edificio, string& nivel, s
         cout << "No se encontró la cuota" << endl;
     }
 
-    // Limpiar el buffer y esperar a que el usuario presione Enter
-    cout << "Presione cualquier tecla para continuar..." << endl;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    cin.get();
+    system("pause");
 }
 
 void listaCuota::mostrarCuotasNoPagadas() {
@@ -178,10 +165,7 @@ void listaCuota::mostrarCuotasNoPagadas() {
         cout << "No hay cuotas no pagadas" << endl;
     }
 
-    // Limpiar el buffer y esperar a que el usuario presione Enter
-    cout << "Presione cualquier tecla para continuar..." << endl;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    cin.get();
+    system("pause");
 }
 
 listaCuota::~listaCuota() {
@@ -193,7 +177,6 @@ listaCuota::~listaCuota() {
     } 
 }
 
-// Definición de las funciones
 void calcularCuotaGeneral(string mes, string edificio) {
     int cantidadPersonas; 
     float monto;
@@ -211,11 +194,8 @@ void calcularCuotaGeneral(string mes, string edificio) {
 
     archivo.close();
 
-    // Mostrar mensaje y esperar
     cout << "Cuota Calculada correctamente" << endl;
-    cout << "Presione cualquier tecla para continuar..." << endl;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    cin.get();
+    system("pause");
 }
 
 void calcularCuotaEspecifica(string& _mes, string& _edificios, int& _cantidadPersonas, float& _montoGen) {
@@ -245,11 +225,8 @@ void calcularCuotaEspecifica(string& _mes, string& _edificios, int& _cantidadPer
     lista.guardadoArchivo("cuotas_Personales.txt");
     archivo.close();
 
-    // Mostrar mensaje y esperar
     cout << "Cuotas específicas calculadas y guardadas correctamente" << endl;
-    cout << "Presione cualquier tecla para continuar..." << endl;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    cin.get();
+    system("pause");
 }
 
 vector<string> split(const string& str, char delim) {
@@ -306,14 +283,14 @@ int busquedaContador(int& contador) {
     return contador;
 }
 
-void mostrarCuotasGenerales() {
+void mostrarCuotasGenerales(string _mes, string edificio_mn) {
     ifstream archivo("Cuota_General.txt", ios::in);
     if (archivo.fail()) {
         cout << "Error, no se pudo cargar el archivo, cerrando programa" << endl;
         exit(1);
     }
 
-    cout << "Datos cuota general" << endl;
+    cout << "CUOTA GENERAL: " << endl;
     string linea;
     while (getline(archivo, linea)) {
         stringstream ss(linea);
@@ -324,17 +301,17 @@ void mostrarCuotasGenerales() {
         getline(ss, mes, ';');
         getline(ss, monto, ';');
 
-        cout << "Cuota: " << cuota << endl;
-        cout << "Edificio: " << edificio << endl;
-        cout << "Mes: " << mes << endl;
-        cout << "Monto: " << monto << endl;
+        if(edificio == edificio_mn && mes == _mes){
+            cout << "Cuota: " << cuota << endl;
+            cout << "Edificio: " << edificio << endl;
+            cout << "Mes: " << mes << endl;
+            cout << "Monto: " << monto << endl;
+        }
     }
     archivo.close();
 
-    // Limpiar el buffer y esperar a que el usuario presione Enter
-    cout << "Presione cualquier tecla para continuar..." << endl;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    cin.get();
+    cout << endl;
+    system("pause");
 }
 
 void mostrarCuotasEspecificas() {
@@ -369,9 +346,6 @@ void mostrarCuotasEspecificas() {
 
     archivo.close();
     lista.mostrarCuotas();
-
-    // Limpiar el buffer y esperar a que el usuario presione Enter
-    cout << "Presione cualquier tecla para continuar..." << endl;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    cin.get();
+    cout <<endl;
+    system("pause");
 }

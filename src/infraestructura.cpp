@@ -95,13 +95,12 @@ public:
         DepartamentoNodo* actual = cabeza;
         while (actual != nullptr) {
             if (actual->data.nmro_apartamento == numero_departamento && actual->data.nro_nivel==nro_nivel && actual->data.nmbr_edificio == _nmbr_edificio && actual->data.propietario == "Sin_Propietario") {
-                return actual;  // Retornar el nodo si coincide el número de departamento
+                return actual; 
             }
             actual = actual->siguiente;
         }
-        return nullptr;  // Si no se encuentra, retornar nullptr
+        return nullptr; 
     }
-
     void clear() {
         DepartamentoNodo* actual = cabeza;
         while (actual != nullptr) {
@@ -157,11 +156,11 @@ public:
         NivelNodo* actual = cabeza;
         while (actual != nullptr) {
             if (actual->data.numero == numero_nivel) {
-                return actual;  // Retornar el nodo si coincide el número del nivel
+                return actual; 
             }
             actual = actual->siguiente;
         }
-        return nullptr;  // Si no se encuentra, retornar nullptr
+        return nullptr;
     }
 
 };
@@ -181,23 +180,18 @@ struct Edificio {
     }
 
     Departamento* obtenerDepartamento(int nivel, int numero_departamento) {
-        // Buscar el nivel especificado
         NivelNodo* nivelNode;
 
-        // Verificar que el número de nivel esté dentro del rango esperado
         if (nivel < 1 || nivel > cantidad_niveles) {
             return nullptr;
         }
 
-        // Buscar el departamento en el nivel especificado
         DepartamentoNodo* deptoNode;
 
-        // Verificar que el número de departamento esté dentro del rango esperado
         if (numero_departamento < 1 || numero_departamento > departamentos_por_nivel) {
             return nullptr;
         }
 
-        // Retornar el puntero al departamento encontrado
         return &(deptoNode->data);
     }
 };
@@ -232,21 +226,23 @@ public:
         EdificioNodo* actual = cabeza;
         while (actual != nullptr) {
             if (actual->data.nombre == nombre_edificio) {
-                return actual;  // Retornar el nodo si coincide el nombre del edificio
+                return actual;
             }
             actual = actual->siguiente;
         }
-        return nullptr;  // Si no se encuentra, retornar nullptr
+        return nullptr;
     }
 
     void mostrarMenuEdificios(DepartamentoLista& departamentosCargados) {
+        cin.ignore();
+        system("cls");
         DepartamentoNodo* actual = departamentosCargados.cabeza;
 
         if (actual == nullptr) {
             cout << "No hay departamentos cargados." << endl;
             return;
         }
-
+        system("cls");
         cout << "Seleccione un edificio para ver los departamentos:\n";
         cout << "1. Edificio_1\n";
         cout << "2. Edificio_2\n";
@@ -270,20 +266,17 @@ public:
 
         cout << "\nMostrando departamentos del edificio: " << edificioSeleccionado << "\n";
 
-        // Recorrer y mostrar cada nivel
         for (int nivel = 1; nivel <= 5; ++nivel) {
             cout << "\tNivel " << nivel << ":\n";
 
-            // Lista temporal para guardar los departamentos ordenados del nivel actual
             DepartamentoNodo* cabezaOrdenada = nullptr;
 
-            // Extraer departamentos que corresponden a este edificio y nivel
             actual = departamentosCargados.cabeza;
             while (actual != nullptr) {
                 if (actual->data.nmbr_edificio == edificioSeleccionado && actual->data.nro_nivel == nivel) {
-                    // Crear un nuevo nodo para insertar en la lista ordenada
+
                     DepartamentoNodo* nuevoNodo = new DepartamentoNodo(actual->data);
-                    // Insertar en la lista manteniendo el orden por número de departamento
+
                     if (!cabezaOrdenada || cabezaOrdenada->data.nmro_apartamento > nuevoNodo->data.nmro_apartamento) {
                         nuevoNodo->siguiente = cabezaOrdenada;
                         cabezaOrdenada = nuevoNodo;
@@ -299,7 +292,7 @@ public:
                 actual = actual->siguiente;
             }
 
-            // Imprimir los departamentos ordenados
+
             actual = cabezaOrdenada;
             while (actual != nullptr) {
                 cout << "\t\t" << actual->data.nmro_apartamento << ". Propietario: "
@@ -313,6 +306,7 @@ public:
                 cout << "\t(No hay departamentos en este nivel)\n";
             }
         }
+        system("pause");
     }
 
     void clear() {

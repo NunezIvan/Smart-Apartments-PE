@@ -6,7 +6,6 @@
 
 using namespace std;
 
-// Definición de la clase Usuario
 class Usuario {
 private:
     string nombre;
@@ -30,7 +29,6 @@ Usuario::Usuario(string _nombre, string _apellido, int _DNI) {
     DNI = _DNI;
 }
 
-// Getters y setters
 int Usuario::getDNI_Usuario() const {
     return DNI;
 }

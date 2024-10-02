@@ -1,8 +1,7 @@
 #pragma once
 #include <iostream>
 #include "Cuotas.cpp"
-#include <limits> // Para numeric_limits
-
+#include <limits>
 using namespace std;
 
 void pagoCuota(string _mes, string edificio){
@@ -35,10 +34,7 @@ void pagoCuota(string _mes, string edificio){
     archivo.close();
     lista.mostrarCuotasNoPagadas();
 
-    // Limpiar el buffer y esperar a que el usuario presione Enter después de mostrar las cuotas no pagadas
-    cout << "Presione cualquier tecla para continuar..." << endl;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    cin.get();
+    system("pause");
 
     string nivel, apartamento;
     float monto;
@@ -72,7 +68,7 @@ void pagoCuota(string _mes, string edificio){
             cout << " Elija una opcion: ";
 
             cin >> menu; 
-            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Limpiar el buffer después de ingresar el menú
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
             switch (menu) {
                 case 1: {
@@ -109,7 +105,6 @@ void pagoCuota(string _mes, string edificio){
         archivo << _mes << ';' << edificio << ';' << nivel << ';' << apartamento << ';' << monto << ';' << tipo << endl;
         archivo.close();
 
-        // Mostrar mensaje y esperar
         cout << "Pago registrado correctamente" << endl;
         cout << "Presione cualquier tecla para continuar..." << endl;
         cin.get();
@@ -137,8 +132,5 @@ void mostrarIngresos() {
     }
     archivo.close();
 
-    // Limpiar el buffer y esperar a que el usuario presione Enter
-    cout << "Presione cualquier tecla para continuar..." << endl;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    cin.get();
+    system("pause");
 }

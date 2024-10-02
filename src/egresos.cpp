@@ -592,7 +592,7 @@ void menuConsumo(const string& mes, const string& edificio){
    } while (r1 != '0');
 }
 
-void menuControlDeCaja(const string& mes, const string& edificio){
+void menuControlDeCaja(const string& mes, const string& edificio){ // Ponerlo en un archivo (Control_Caja)
    char r = ' ';
    string temp_mes=mes, temp_edificio=edificio;
    do {
@@ -640,7 +640,7 @@ void menuControlDeCaja(const string& mes, const string& edificio){
 
          case '5':
             system("CLS");
-            mostrarCuotasGenerales();
+            mostrarCuotasGenerales(temp_mes,temp_edificio);
             break;
          case '6':
             system("CLS");
@@ -663,7 +663,7 @@ void menuControlDeCaja(const string& mes, const string& edificio){
    } while (r != '0');
 }
 
-void menuMeses(const string& edificio){
+void menuMeses(const string& edificio){ //Ponerla en un archivo general (Control_Caja)
    string temp_edificio=edificio;
     char opcion;
    do{
@@ -770,7 +770,7 @@ void menuMeses(const string& edificio){
    }while (opcion != '0');
 }
 
-void menuElegirEdificio (){
+void menuElegirEdificio (){ //Ponerla en un archivo general (Control_Caja)
   char r = ' ';
    do {
       system("CLS");

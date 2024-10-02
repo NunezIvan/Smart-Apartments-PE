@@ -6,7 +6,6 @@
 
 using namespace std;
 
-// Función para crear archivos por defecto
 void crearArchivosDefecto() {
     ofstream archivo1("propietarios.txt", ios::out | ios::app);
     if (archivo1.is_open()) {
@@ -42,7 +41,6 @@ void crearArchivosDefecto() {
 
 }
 
-// Función para crear un usuario administrador por defecto
 void usuario_Defecto(){
     administrador_Cond admin("Ivan","Nunez",72167843);
 }
@@ -53,6 +51,7 @@ int main() {
 
     int opcion;
     do {
+        system("cls");
         cout << "=====================================" << endl;
         cout << "          BIENVENIDO AL SISTEMA     " << endl;
         cout << "=====================================" << endl;
