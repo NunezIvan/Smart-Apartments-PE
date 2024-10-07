@@ -1,5 +1,0 @@
-72196745;Juan_Melses;123456;4;2;Edificio_1
-72156743;Joel_Castillejo;123456;4;1;Edificio_1
-72213563;Luis_Sopero;123456;2;3;Edificio_1
-74356789;Hariarox_Sylas;123456;1;3;Edificio_2
-76543212;Gordonie_Herrera;123456;1;2;Edificio_1

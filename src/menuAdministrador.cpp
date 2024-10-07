@@ -5,24 +5,26 @@
 #include "infraestructura.cpp" 
 #include "usuario_Apartamento.cpp"
 #include "egresos.cpp"
+#include "menu.cpp"
 
 using namespace std;
 
-EdificioLista crearEdificiosListaporDefecto(){
+
+EdificioLista generar_Infraestructura(){
     EdificioLista edificios;
-    Edificio edificio1("Edificio_1", 5, 4);
+    Edificio edificio1("Edificio_1", NRO_NIVEL_EDIFICIO,NRO_DEPARTAMENTOS_NIVEL);
     edificios.insertarAlFinal(edificio1);
-    Edificio edificio2("Edificio_2", 5, 4);
+    Edificio edificio2("Edificio_2", NRO_NIVEL_EDIFICIO,NRO_DEPARTAMENTOS_NIVEL);
     edificios.insertarAlFinal(edificio2);
     return edificios;
 }
 
-EdificioLista edificios = crearEdificiosListaporDefecto();
+EdificioLista edificios = generar_Infraestructura();
 
 DepartamentoLista cargarDepartamentos() {
     DepartamentoLista departamentosCargados;  
 
-    ifstream archivo("departamentos.txt");
+    ifstream archivo("data/departamentos.txt");
     if (!archivo.is_open()) {
         return departamentosCargados; 
     }
@@ -58,8 +60,8 @@ DepartamentoLista cargarDepartamentos() {
 }
 
 void modificarArchivoPropietario(string nombre_Usuario, string edificioNombre, int nmro_apartamento, int nro_nivel) {
-    ifstream archivo_original("departamentos.txt");
-    ofstream archivo_temporal("departamentos_Temporal.txt", ios::app);
+    ifstream archivo_original("data/departamentos.txt");
+    ofstream archivo_temporal("data/departamentos_Temporal.txt", ios::app);
 
     if (!archivo_original.is_open() || !archivo_temporal.is_open()) {
         cout << "No se puede abrir uno de los archivos" << endl;  
@@ -108,84 +110,210 @@ void modificarArchivoPropietario(string nombre_Usuario, string edificioNombre, i
     archivo_temporal.close();
 
     if (modificado) {
-        if (remove("departamentos.txt") != 0) {
+        if (remove("data/departamentos.txt") != 0) {
             cout << "Error al eliminar el archivo original" << endl;
-        } else if (rename("departamentos_Temporal.txt", "departamentos.txt") != 0) {
+        } else if (rename("data/departamentos_Temporal.txt", "data/departamentos.txt") != 0) {
             cout << "Error al renombrar el archivo temporal" << endl;
         }
     } else {
-        remove("departamentos_Temporal.txt");
+        remove("data/departamentos_Temporal.txt");
     }
 }
 
 
 void registrarPropietario() {
     system("cls");
+    DepartamentoLista depas = cargarDepartamentos();
+    printtitle();
+    gotoxy(40,14);
+    cout <<"▂▃▄▅▆▇█▓▒░REGISTRO DE PROPIETARIO░▒▓█▇▆▅▄▃▂" << endl;
     string nombre, apellido, edificioNombre;
     int nro_nivel, nmro_apartamento,DNI;
-
+    gotoxy(45,16);
     cout << "Ingrese el DNI del propietario: ";
     cin >> DNI;
+    gotoxy(45,17);
     cout << "Ingrese el nombre del propietario: ";
     cin.ignore();  
     getline(cin, nombre);
+    gotoxy(45,18);
     cout << "Ingrese el apellido del propietario: ";
     getline(cin, apellido);
+    gotoxy(45,19);
     cout << "Ingrese el nombre del edificio: ";
     cin >> edificioNombre;
+    gotoxy(45,20);
     cout << "Ingrese el número de nivel: ";
     cin >> nro_nivel;
+    gotoxy(45,21);
     cout << "Ingrese el número de apartamento: ";
     cin >> nmro_apartamento;
 
     EdificioNodo* edificioNode = edificios.buscar(edificioNombre);
     if (edificioNode != nullptr) {
         Edificio& edificio = edificioNode->data;
-        
-        DepartamentoLista depas = cargarDepartamentos();
-        if (depas.verificarPropietario(nmro_apartamento,nro_nivel,edificioNombre) != nullptr) {  // Verificar si el departamento está vacío
-            string nombreUsuario = nombre + "_" + apellido;
-            cout << "Propietario registrado exitosamente.\n";
-
-            usuario_Apartamento propietario(nombre, apellido, nmro_apartamento, nro_nivel, edificioNombre,DNI);
-
-            modificarArchivoPropietario(nombreUsuario,edificioNombre,nmro_apartamento,nro_nivel);
-            
-        } else {
-            cout << "Error: Este departamento ya tiene propietario.\n";
+        NivelNodo* NivelNode = edificio.niveles.buscar(nro_nivel);
+        if(NivelNode !=nullptr){
+            Nivel& nivel = NivelNode->data;
+            DepartamentoNodo* departamentoNode = nivel.departamentos.buscar(nmro_apartamento);
+            if(departamentoNode!=nullptr){
+                if(depas.verificarPropietario(nmro_apartamento,nro_nivel,edificioNombre) != nullptr){
+                    string nombreUsuario = nombre + "_" + apellido;
+                    gotoxy(48,22);
+                    cout << "Propietario registrado exitosamente.\n";
+                    usuario_Apartamento propietario(nombre, apellido, nmro_apartamento, nro_nivel, edificioNombre,DNI);
+                    modificarArchivoPropietario(nombreUsuario,edificioNombre,nmro_apartamento,nro_nivel);
+                    cin.ignore();
+                }else{
+                    gotoxy(48,22);
+                    cout << "Error: Este departamento ya tiene propietario.\n";
+                    cin.ignore();
+                }
+            }else{
+                gotoxy(48,22);
+                cout<<"Error: Departamento no encontrado.";
+                cin.ignore();
+            }
+        }else{
+            gotoxy(48,22);
+            cout<< "Error: Nivel no encontrado. ";
             cin.ignore();
         }
     } else {
+        gotoxy(48,22);
         cout << "Error: Edificio no encontrado.\n";
         cin.ignore();
     }
-    system("pause");
+    cin.get();
 }
 
-void mostrarEdificios(DepartamentoLista& departamentosCargados) {
-    edificios.mostrarMenuEdificios(departamentosCargados);
+void mostrarMenuEdificios(DepartamentoLista& departamentosCargados) {
+    system("cls");
+    printtitle();
+    DepartamentoNodo* actual = departamentosCargados.cabeza;
+
+    if (actual == nullptr) {
+        gotoxy(40, 14);
+        cout << "No hay departamentos cargados." << endl;
+        return;
+    }
+
+    gotoxy(40, 14);
+    cout << "▂▃▄▅▆▇█▒▐▓SELECCION DE EDIFICIOS▓▐█▇▆▅▄▃▂" << endl;
+    gotoxy(40, 16);
+    cout << "1. Edificio_1";
+    gotoxy(40, 17);
+    cout << "2. Edificio_2";
+
+    int seleccion;
+    gotoxy(40, 18);
+    cout << "Seleccione el número de edificio: ";
+    cin >> seleccion;
+
+    string edificioSeleccionado;
+    switch (seleccion) {
+        case 1:
+            edificioSeleccionado = "Edificio_1";
+            break;
+        case 2:
+            edificioSeleccionado = "Edificio_2";
+            break;
+        default:
+            cout << "Selección no válida." << endl;
+            return;
+    }
+
+    system("cls");
+    printtitle1();
+    gotoxy(40, 11);
+    cout << "▂▃▄▅▆▇█▒▐▓" << edificioSeleccionado << "▓▐█▇▆▅▄▃▂" << endl;
+
+    int xPositionBase1 = 8; 
+    int xPositionBase2 = 42; 
+    int xPositionBase3 = 76;
+    int yPositionBase = 13; 
+
+    for (int nivel = 1; nivel <= NRO_NIVEL_EDIFICIO; ++nivel) {
+        int xPosition;
+        if (nivel == 1 || nivel == 2) {
+            xPosition = xPositionBase1;  
+        } else if (nivel == 3 || nivel == 4) {
+            xPosition = xPositionBase2; 
+        } else {
+            xPosition = xPositionBase3; 
+        }
+        int yPosition = yPositionBase + ((nivel == 2 || nivel == 4) ? 6 : 0);
+
+        gotoxy(xPosition, yPosition);
+        cout << "Nivel " << nivel << ":";
+
+        DepartamentoNodo* cabezaOrdenada = nullptr;
+
+        actual = departamentosCargados.cabeza;
+        while (actual != nullptr) {
+            if (actual->data.nmbr_edificio == edificioSeleccionado && actual->data.nro_nivel == nivel) {
+                DepartamentoNodo* nuevoNodo = new DepartamentoNodo(actual->data);
+                if (!cabezaOrdenada || cabezaOrdenada->data.nmro_apartamento > nuevoNodo->data.nmro_apartamento) {
+                    nuevoNodo->siguiente = cabezaOrdenada;
+                    cabezaOrdenada = nuevoNodo;
+                } else {
+                    DepartamentoNodo* actualOrdenado = cabezaOrdenada;
+                    while (actualOrdenado->siguiente && actualOrdenado->siguiente->data.nmro_apartamento < nuevoNodo->data.nmro_apartamento) {
+                        actualOrdenado = actualOrdenado->siguiente;
+                    }
+                    nuevoNodo->siguiente = actualOrdenado->siguiente;
+                    actualOrdenado->siguiente = nuevoNodo;
+                }
+            }
+            actual = actual->siguiente;
+        }
+
+        actual = cabezaOrdenada;
+        int deptCount = 1; 
+        while (actual != nullptr) {
+            gotoxy(xPosition, yPosition + deptCount);
+            cout << actual->data.nmro_apartamento << ". Propietario: "
+                 << (actual->data.propietario == "Sin_propietario" ? "Libre" : actual->data.propietario);
+            deptCount++;
+            DepartamentoNodo* temp = actual;
+            actual = actual->siguiente;
+            delete temp;
+        }
+
+        if (!cabezaOrdenada) {
+            gotoxy(xPosition, yPosition + 1);
+            cout << "(No hay departamentos en este nivel)";
+        }
+    }
+
+    cin.get();
 }
+
+
 
 void menuAdministrador() {
-    
-    cin.ignore();
-    DepartamentoLista departamentosCargados = cargarDepartamentos();
+    system("cls");
     int opcion;
     do {
-        system("cls");
-        cout << "=====================================" << endl;
-        cout << " BIENVENIDO AL MENU DE ADMINISTRADOR     " << endl;
-        cout << "=====================================" << endl;
-        cout << "1. Mostrar información de los edificios\n";
-        cout << "2. Registrar un nuevo propietario\n";
-        cout << "3. Gestion de control de caja \n";
-        cout << "4. Salir\n";
+        DepartamentoLista departamentosCargados = cargarDepartamentos();
+        printtitle();
+        gotoxy(40,14);
+        cout <<"▂▃▄▅▆▇█▓▒░MENU DE ADMINISTRADOR░▒▓█▇▆▅▄▃▂" << endl;
+        gotoxy(41,16);
+        cout << "1. Mostrar información de los edificios";
+        gotoxy(41,17);
+        cout << "2. Registrar un nuevo propietario";
+        gotoxy(41,18);
+        cout << "3. Gestion de control de caja";
+        gotoxy(41,19);
+        cout << "4. Salir";
+        gotoxy(41,20);
         cout << "Seleccione una opción: ";
         cin >> opcion;
 
         switch(opcion) {
             case 1:
-                mostrarEdificios(departamentosCargados);
+                mostrarMenuEdificios(departamentosCargados);
                 cin.ignore();
                 break;
             case 2:
@@ -197,7 +325,9 @@ void menuAdministrador() {
             case 4:
                 break;
             default:
+                gotoxy(48,21);
                 cout << "Opción no válida.\n";
+                cin.get();
                 break;
         }
     } while(opcion != 4);

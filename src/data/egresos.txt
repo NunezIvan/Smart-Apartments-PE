@@ -1,0 +1,10 @@
+Limpieza;aaron;3;Enero;Transferencia Bancaria;30;Edificio_1
+Pago Agua;Enero;Transferencia Bancaria;858.875;Edificio_1
+Pago Seguridad;Enero;por Yape;150;Edificio_1
+Mante. Ascensor;Enero;en Efectivo;150;Edificio_1
+Mante. Area Verdes;Enero;en BCP;130;Edificio_1
+Limpieza;ola;12;Enero;Via Web;150;Edificio_1
+Limpieza;r;3;Enero;por Yape;12;Edificio_1
+Mante. Ascensor;Enero;Transferencia Bancaria;140;Edificio_1
+Pago Agua;Enero;Transferencia Bancaria;781.467;Edificio_1
+Pago Agua;Enero;Via Web;84.7948;Edificio_1

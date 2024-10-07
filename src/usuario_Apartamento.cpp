@@ -24,7 +24,7 @@ public:
         generarNombreUsuario(); 
         generarContrasena();    
 
-        ofstream file("propietarios.txt", ios::app);
+        ofstream file("data/propietarios.txt", ios::app);
         if (file.is_open()) {
             file << getDNI_Usuario() << ";" << getNom_Usuario() << ";" << getContr_Usuario() << ";"
                  << nmro_apart << ";" << nivel << ";" << nmbr_edificio << "\n";
