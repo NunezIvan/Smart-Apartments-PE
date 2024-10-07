@@ -1,2 +1,0 @@
-Pago Seguridad;Enero;Transferencia Bancaria;150;Edificio_1
-Pago Seguridad;Enero;Transferencia Bancaria;150;Edificio_1
