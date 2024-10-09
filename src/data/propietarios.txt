@@ -1,2 +1,0 @@
-72189012;Luis_Guevara;123456;1;1;Edificio_1
-72156734;Jim_Segovia;123456;2;1;Edificio_2

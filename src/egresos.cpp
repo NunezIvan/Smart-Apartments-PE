@@ -526,6 +526,7 @@ void mostrarEgresos(const string& mes, const string& edificio) {
     gotoxy(0, y); cout << "+----------------------------+----------------------+------------+----------------+----------------+------------+-------------+";
 
     archivo.close();
+    cin.ignore();
 }
 
 
