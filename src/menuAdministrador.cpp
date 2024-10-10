@@ -120,6 +120,53 @@ void modificarArchivoPropietario(string nombre_Usuario, string edificioNombre, i
     }
 }
 
+void CambioPropietario(){
+    ifstream archivo("propietarios.txt", ios::in);
+    ofstream temporal("propietarios_temp.txt", ios::app);
+    bool encontrado = false;
+    string DNI_buscar, DNI, DNI_aux, nombre, apellido, aux_nombre_Usuario, nombre_Usuario, nombre_edificio, nivel, apartamento;
+    if(!archivo.is_open() || !temporal.is_open()){
+        cout << "Fallo al abrir los archivos" << endl;
+        return;
+    }
+    cout<<"Ingrese el DNI del propietario que desea cambiar: ";
+    cin>>DNI_buscar;
+    archivo>>DNI;
+    while(!archivo.eof()){
+        archivo>>nombre_Usuario>>apartamento>>nivel>>nombre_edificio;
+        if(DNI == DNI_buscar){
+            encontrado=true;
+            cout<<"-----------------------"<<endl;
+            cout<<"Persona encontrada"<<endl;
+            cout<<"DNI: "<<DNI<<endl;
+            cout<<"Usuario: "<<nombre_Usuario<<endl;
+            cout<<"Edificio: "<<nombre_edificio<<endl;
+            cout<<"Nivel: "<<nivel<<endl;
+            cout<<"Apartamento: "<<apartamento<<endl;
+            cout<<"-----------------------"<<endl;
+            cout<<"Ingrese el DNI del nuevo propietario: ";
+            cin>>DNI_aux;
+            cout<<"Ingrese el nombre del nuevo propietario: ";
+            cin>>nombre;
+            cout<<"Ingrese el apellido del nuevo propietario: ";
+            cin>>apellido;
+            aux_nombre_Usuario = nombre + "_" + apellido;
+            temporal<<DNI_aux<<";"<<aux_nombre_Usuario<<";"<<apartamento<<";"<<nivel<<";"<<nombre_edificio<<endl;
+            cout<<"Propietario modificado con exito";
+        }
+        else{
+            temporal<<DNI<<";"<<nombre_Usuario<<";"<<apartamento<<";"<<nivel<<";"<<nombre_edificio<<endl;
+        }
+    }
+    archivo>>DNI;
+    archivo.close();
+    temporal.close();
+    remove("propietarios.txt");
+    rename("temporal.txt", "propietarios.txt");
+    if(encontrado==false){
+        cout<<"No se encontro un propietario con el DNI: "<<DNI_buscar;
+    }
+}
 
 void registrarPropietario() {
     system("cls");
@@ -306,8 +353,10 @@ void menuAdministrador() {
         gotoxy(41,18);
         cout << "3. Gestion de control de caja";
         gotoxy(41,19);
-        cout << "4. Salir";
+        cout << "4. Modificar Propietarios";
         gotoxy(41,20);
+        cout << "5. Salir";
+        gotoxy(41,21);
         cout << "Seleccione una opción: ";
         cin >> opcion;
 
@@ -323,6 +372,9 @@ void menuAdministrador() {
                 menuElegirEdificio ();
                 break;
             case 4:
+                CambioPropietario();
+                break;
+            case 5:
                 break;
             default:
                 gotoxy(48,21);
