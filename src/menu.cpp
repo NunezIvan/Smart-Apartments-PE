@@ -3,6 +3,7 @@
 #include <fstream>
 #include <limits>
 #include <windows.h>
+#include <locale>
 
 using namespace std;
 
@@ -15,6 +16,7 @@ void gotoxy(int x, int y) {
 }
 
 void printtitle(){
+    setlocale(LC_ALL, "en_US.UTF-8");
     system("cls");
     string menu_ascii[] = {
         "   ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓",
@@ -33,6 +35,7 @@ void printtitle(){
 }
 
 void printtitle1(){
+    setlocale(LC_ALL, "en_US.UTF-8");
     system("cls");
     string menu_ascii[] = {
         "   ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓",

@@ -2,6 +2,7 @@
 #include <sys/types.h>
 #include <iostream>
 #include <fstream>
+#include <locale>
 #include "menu.cpp"
 #include "login.cpp"
 #include "administrador.cpp"
@@ -108,6 +109,7 @@ void opciones_Inicio(){
 }
 
 int main() {
+
     crearArchivosDefecto();
     Administrador_por_defecto();
     opciones_Inicio();
