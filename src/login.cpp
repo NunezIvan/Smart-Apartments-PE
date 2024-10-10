@@ -119,7 +119,7 @@ void inicio_SesionAdministrador() {
             gotoxy(33,16);
             cout<<"Presione una tecla para continuar..............";
             cin.get();
-            menuAdministrador();
+            menuAdministrador(nombre_ingresado);
             encontrado = true;
             break;
         }

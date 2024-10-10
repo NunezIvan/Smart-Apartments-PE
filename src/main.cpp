@@ -158,8 +158,6 @@ void recuperarAdmin(){
     cin.get();
 }
 
-
-
 void opciones_Inicio(){ 
     system("cls");
     int opc;
