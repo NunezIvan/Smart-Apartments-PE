@@ -290,8 +290,6 @@ void mostrarMenuEdificios(DepartamentoLista& departamentosCargados) {
 
 void buscarPropietarioPorDNI() {
     char opcion;
-    int fila;
-    
     do {
         system("cls");
         int dniBuscado;
@@ -335,8 +333,8 @@ void buscarPropietarioPorDNI() {
             if (!getline(ss, dni_str, ';') ||
                 !getline(ss, nombre, ';') ||
                 !getline(ss, contrasena, ';') ||
-                !getline(ss, nro_nivel_str, ';') ||
                 !getline(ss, nmro_apart_str, ';') ||
+                !getline(ss, nro_nivel_str, ';') ||
                 !getline(ss, nmbr_edificio)) {
                 continue;
             }
@@ -380,8 +378,6 @@ void buscarPropietarioPorDNI() {
         cin.ignore(); 
 
     } while (opcion == 's' || opcion == 'S'); 
-
-    gotoxy(45, fila + 5);
     cin.get(); 
 }
 
