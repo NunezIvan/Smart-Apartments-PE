@@ -154,7 +154,7 @@ void modificarArchivoPropietario(string nombre_Usuario, string edificioNombre, i
 
 void CambioPropietario() {
     ifstream archivo("data/propietarios.txt", ios::in);
-    ofstream temporal("data/propietarios_temp.txt", ios::app);
+    ofstream temporal("data/propietarios_temp.txt", ios::out);
     propietarioNodo* pila = nullptr;
     Propietario propietario;
     bool encontrado = false;
@@ -166,8 +166,7 @@ void CambioPropietario() {
         return;
     }
     system("cls");
-    printtitle();
-    gotoxy(40,14);
+    gotoxy(40,10);
     cout << "Ingrese el DNI del propietario que desea cambiar: ";
     cin >> DNI_buscar;
 
@@ -182,30 +181,30 @@ void CambioPropietario() {
 
         if (propietario.DNI == DNI_buscar) {
             encontrado = true;
-            gotoxy(40,14);
+            gotoxy(40,11);
             cout << "PERSONA ENCONTRADA" << endl;
-            gotoxy(40,15);
+            gotoxy(40,12);
             cout << "-----------------------" << endl;
-            gotoxy(40,16);
+            gotoxy(40,13);
             cout << "DNI: " << propietario.DNI << endl;
-            gotoxy(40,17);
+            gotoxy(40,14);
             cout << "Usuario: " << propietario.nombre_Usuario << endl;
-            gotoxy(40,18);
+            gotoxy(40,15);
             cout << "Edificio: " << propietario.nombre_edificio << endl;
-            gotoxy(40,19);
+            gotoxy(40,16);
             cout << "Nivel: " << propietario.nivel << endl;
-            gotoxy(40,20);
+            gotoxy(40,17);
             cout << "Apartamento: " << propietario.apartamento << endl;
-            gotoxy(40,21);
+            gotoxy(40,18);
             cout << "-----------------------" << endl;
 
-            gotoxy(40,25);
+            gotoxy(40,19);
             cout << "Ingrese el DNI del nuevo propietario: ";
             cin >> DNI_aux;
-            gotoxy(40,26);
+            gotoxy(40,20);
             cout << "Ingrese el nombre del nuevo propietario: ";
             cin >> nombre;
-            gotoxy(40,26);
+            gotoxy(40,21);
             cout << "Ingrese el apellido del nuevo propietario: ";
             cin >> apellido;
 
@@ -217,7 +216,7 @@ void CambioPropietario() {
             nombre_edificio_aux = propietario.nombre_edificio;
             num_apartamento = stoi(propietario.apartamento);
             num_nivel = stoi(propietario.nivel);
-            gotoxy(40,27);
+            gotoxy(40,22);
             cout << "Propietario modificado con éxito" << endl;
         } 
         
@@ -225,9 +224,8 @@ void CambioPropietario() {
 
     }
     archivo.close();
-
     if (!encontrado) {
-        gotoxy(40,15);
+        gotoxy(40,11);
         cout << "No se encontró un propietario con el DNI: " << DNI_buscar << endl;
         remove("data/propietarios_temp.txt");
     } else {
@@ -240,58 +238,6 @@ void CambioPropietario() {
         rename("data/propietarios_temp.txt", "data/propietarios.txt");
         modificarArchivoPropietario(aux_nombre_Usuario, nombre_edificio_aux, num_apartamento, num_nivel);
     }
-}
-
-void buscarPropietario(){
-    ifstream archivo("data/propietarios.txt", ios::in);
-    string DNI, nombre_Usuario, contraseña, apartamento, nivel, nombre_edificio, DNI_buscar, linea;
-    bool busqueda = false;
-    if(!archivo.is_open()){
-        cout << "Fallo al abrir el archivo" << endl;
-        return;
-    }
-
-    system("cls");
-    printtitle();
-    gotoxy(40,13);
-    cout << "Ingrese el DNI del propietario que desea buscar: ";
-    cin >> DNI_buscar;
-    while (getline(archivo, linea)){
-        stringstream ss(linea);
-        getline(ss, DNI, ';');
-        getline(ss, nombre_Usuario, ';');
-        getline(ss, contraseña, ';');
-        getline(ss, apartamento, ';');
-        getline(ss, nivel, ';');
-        getline(ss, nombre_edificio, ';');
-
-        if(DNI == DNI_buscar){
-            busqueda = true;
-            gotoxy(40,14);
-            cout << "PERSONA ENCONTRADA" << endl;
-            gotoxy(40,15);
-            cout << "-----------------------" << endl;
-            gotoxy(40,16);
-            cout << "DNI: " << DNI << endl;
-            gotoxy(40,17);
-            cout << "Usuario: " << nombre_Usuario << endl;
-            gotoxy(40,18);
-            cout << "Edificio: " << nombre_edificio << endl;
-            gotoxy(40,19);
-            cout << "Nivel: " << nivel << endl;
-            gotoxy(40,20);
-            cout << "Apartamento: " << apartamento << endl;
-            gotoxy(40,21);
-            cout << "-----------------------" << endl;
-        }
-    }
-    if(!busqueda){
-        gotoxy(40,14);
-        cout << "No se ha encontrado un propietario con el DNI: " << DNI_buscar;
-    }
-    
-
-
 }
 
 void registrarPropietario() {
@@ -503,9 +449,6 @@ void menuAdministrador() {
                 CambioPropietario();
                 break;
             case 5:
-                buscarPropietario();
-                break;
-            case 6:
                 break;
             default:
                 gotoxy(48,21);

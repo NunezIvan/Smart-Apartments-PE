@@ -1,8 +1,8 @@
-Juan_Castillo;1;1;Edificio_1
+Joshua_pato;1;1;Edificio_1
 Sin_Propietario;2;1;Edificio_1
 Sin_Propietario;3;1;Edificio_1
 Sin_Propietario;4;1;Edificio_1
-Luis_Guevara;1;2;Edificio_1
+Ivan_Nunez;1;2;Edificio_1
 Sin_Propietario;2;2;Edificio_1
 Sin_Propietario;3;2;Edificio_1
 Sin_Propietario;4;2;Edificio_1
@@ -11,7 +11,7 @@ Jose_Castillejo;2;3;Edificio_1
 Sin_Propietario;3;3;Edificio_1
 Sin_Propietario;4;3;Edificio_1
 Sin_Propietario;1;4;Edificio_1
-Luis_David;2;4;Edificio_1
+Jeff_TKS;2;4;Edificio_1
 Sin_Propietario;3;4;Edificio_1
 Sin_Propietario;4;4;Edificio_1
 Sin_Propietario;1;5;Edificio_1
