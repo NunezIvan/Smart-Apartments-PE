@@ -9,7 +9,6 @@
 
 using namespace std;
 
-
 EdificioLista generar_Infraestructura(){
     EdificioLista edificios;
     Edificio edificio1("Edificio_1", NRO_NIVEL_EDIFICIO,NRO_DEPARTAMENTOS_NIVEL);
@@ -120,51 +119,77 @@ void modificarArchivoPropietario(string nombre_Usuario, string edificioNombre, i
     }
 }
 
-void CambioPropietario(){
-    ifstream archivo("propietarios.txt", ios::in);
-    ofstream temporal("propietarios_temp.txt", ios::app);
+void CambioPropietario() {
+    ifstream archivo("data/propietarios.txt", ios::in);
+    ofstream temporal("data/propietarios_temp.txt", ios::out);
     bool encontrado = false;
-    string DNI_buscar, DNI, DNI_aux, nombre, apellido, aux_nombre_Usuario, nombre_Usuario, nombre_edificio, nivel, apartamento;
-    if(!archivo.is_open() || !temporal.is_open()){
+    string DNI_buscar, DNI_aux, linea, DNI, nombre_Usuario, contra, nombre, apellido, apartamento, nivel, nombre_edificio, aux_nombre_Usuario;
+    int num_apartamento = 0, num_nivel = 0;
+
+    if (!archivo.is_open() || !temporal.is_open()) {
         cout << "Fallo al abrir los archivos" << endl;
         return;
     }
-    cout<<"Ingrese el DNI del propietario que desea cambiar: ";
-    cin>>DNI_buscar;
-    archivo>>DNI;
-    while(!archivo.eof()){
-        archivo>>nombre_Usuario>>apartamento>>nivel>>nombre_edificio;
-        if(DNI == DNI_buscar){
-            encontrado=true;
-            cout<<"-----------------------"<<endl;
-            cout<<"Persona encontrada"<<endl;
-            cout<<"DNI: "<<DNI<<endl;
-            cout<<"Usuario: "<<nombre_Usuario<<endl;
-            cout<<"Edificio: "<<nombre_edificio<<endl;
-            cout<<"Nivel: "<<nivel<<endl;
-            cout<<"Apartamento: "<<apartamento<<endl;
-            cout<<"-----------------------"<<endl;
-            cout<<"Ingrese el DNI del nuevo propietario: ";
-            cin>>DNI_aux;
-            cout<<"Ingrese el nombre del nuevo propietario: ";
-            cin>>nombre;
-            cout<<"Ingrese el apellido del nuevo propietario: ";
-            cin>>apellido;
+
+    cout << "Ingrese el DNI del propietario que desea cambiar: ";
+    cin >> DNI_buscar;
+
+    while (getline(archivo, linea)) {  //comentario que una ia no hizo: Lectura de todas las líneas del documento
+        stringstream ss(linea);
+        getline(ss, DNI, ';');
+        getline(ss, nombre_Usuario, ';');
+        getline(ss, contra, ';');
+        getline(ss, apartamento, ';');
+        getline(ss, nivel, ';');
+        getline(ss, nombre_edificio, ';');
+
+        if (DNI == DNI_buscar) {
+            encontrado = true;
+            system("cls");
+            cout << "-----------------------" << endl;
+            cout << "Persona encontrada" << endl;
+            cout << "DNI: " << DNI << endl;
+            cout << "Usuario: " << nombre_Usuario << endl;
+            cout << "Edificio: " << nombre_edificio << endl;
+            cout << "Nivel: " << nivel << endl;
+            cout << "Apartamento: " << apartamento << endl;
+            cout << "-----------------------" << endl;
+
+            cout << "Ingrese el DNI del nuevo propietario: ";
+            cin >> DNI_aux;
+            cout << "Ingrese el nombre del nuevo propietario: ";
+            cin >> nombre;
+            cout << "Ingrese el apellido del nuevo propietario: ";
+            cin >> apellido;
+
+            
             aux_nombre_Usuario = nombre + "_" + apellido;
-            temporal<<DNI_aux<<";"<<aux_nombre_Usuario<<";"<<apartamento<<";"<<nivel<<";"<<nombre_edificio<<endl;
-            cout<<"Propietario modificado con exito";
-        }
-        else{
-            temporal<<DNI<<";"<<nombre_Usuario<<";"<<apartamento<<";"<<nivel<<";"<<nombre_edificio<<endl;
+
+            
+            num_apartamento = stoi(apartamento);
+            num_nivel = stoi(nivel);
+
+            
+            temporal << DNI_aux << ";" << aux_nombre_Usuario << ";" << contra << ";" << apartamento << ";" << nivel << ";" << nombre_edificio << endl;
+            cout << "Propietario modificado con éxito" << endl;
+        } else {
+            
+            temporal << DNI << ";" << nombre_Usuario << ";" << contra << ";" << apartamento << ";" << nivel << ";" << nombre_edificio << endl;
         }
     }
-    archivo>>DNI;
+
     archivo.close();
     temporal.close();
-    remove("propietarios.txt");
-    rename("temporal.txt", "propietarios.txt");
-    if(encontrado==false){
-        cout<<"No se encontro un propietario con el DNI: "<<DNI_buscar;
+
+    
+    remove("data/propietarios.txt");
+    rename("data/propietarios_temp.txt", "data/propietarios.txt");
+
+    if (!encontrado) {
+        cout << "No se encontró un propietario con el DNI: " << DNI_buscar << endl;
+    } else {
+        
+        modificarArchivoPropietario(aux_nombre_Usuario, nombre_edificio, num_apartamento, num_nivel);
     }
 }
 
@@ -382,5 +407,5 @@ void menuAdministrador() {
                 cin.get();
                 break;
         }
-    } while(opcion != 4);
+    } while(opcion != 5);
 }
