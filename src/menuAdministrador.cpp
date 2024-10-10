@@ -8,6 +8,39 @@
 #include "menu.cpp"
 
 using namespace std;
+struct Propietario{
+    string DNI;
+    string nombre_Usuario;
+    string contraseña;
+    string apartamento;
+    string nivel;
+    string nombre_edificio;
+};
+
+struct propietarioNodo{
+    Propietario dato;
+    propietarioNodo* sgte;
+};
+
+void push(propietarioNodo*& pila, Propietario propietario){
+    propietarioNodo* nuevo = new propietarioNodo();
+    nuevo->dato = propietario;
+    nuevo->sgte = pila;
+    pila = nuevo;
+}
+
+Propietario pop(propietarioNodo*& pila){
+    if(pila==nullptr){
+        cout<<"Se guardaron los cambios"<<endl;
+        return {};
+    }else{
+        Propietario propietario = pila->dato;
+        propietarioNodo* aux = pila;
+        pila = pila->sgte;
+        delete aux;
+        return propietario;
+    }
+}
 
 EdificioLista generar_Infraestructura(){
     EdificioLista edificios;
@@ -121,76 +154,144 @@ void modificarArchivoPropietario(string nombre_Usuario, string edificioNombre, i
 
 void CambioPropietario() {
     ifstream archivo("data/propietarios.txt", ios::in);
-    ofstream temporal("data/propietarios_temp.txt", ios::out);
+    ofstream temporal("data/propietarios_temp.txt", ios::app);
+    propietarioNodo* pila = nullptr;
+    Propietario propietario;
     bool encontrado = false;
-    string DNI_buscar, DNI_aux, linea, DNI, nombre_Usuario, contra, nombre, apellido, apartamento, nivel, nombre_edificio, aux_nombre_Usuario;
+    string DNI_buscar, DNI_aux, linea, aux_nombre_Usuario, nombre, apellido, nombre_edificio_aux;
     int num_apartamento = 0, num_nivel = 0;
 
     if (!archivo.is_open() || !temporal.is_open()) {
         cout << "Fallo al abrir los archivos" << endl;
         return;
     }
-
+    system("cls");
+    printtitle();
+    gotoxy(40,14);
     cout << "Ingrese el DNI del propietario que desea cambiar: ";
     cin >> DNI_buscar;
 
-    while (getline(archivo, linea)) {  //comentario que una ia no hizo: Lectura de todas las líneas del documento
+    while (getline(archivo, linea)) { 
         stringstream ss(linea);
-        getline(ss, DNI, ';');
-        getline(ss, nombre_Usuario, ';');
-        getline(ss, contra, ';');
-        getline(ss, apartamento, ';');
-        getline(ss, nivel, ';');
-        getline(ss, nombre_edificio, ';');
+        getline(ss, propietario.DNI, ';');
+        getline(ss, propietario.nombre_Usuario, ';');
+        getline(ss, propietario.contraseña, ';');
+        getline(ss, propietario.apartamento, ';');
+        getline(ss, propietario.nivel, ';');
+        getline(ss, propietario.nombre_edificio, ';');
 
-        if (DNI == DNI_buscar) {
+        if (propietario.DNI == DNI_buscar) {
             encontrado = true;
-            system("cls");
+            gotoxy(40,14);
+            cout << "PERSONA ENCONTRADA" << endl;
+            gotoxy(40,15);
             cout << "-----------------------" << endl;
-            cout << "Persona encontrada" << endl;
-            cout << "DNI: " << DNI << endl;
-            cout << "Usuario: " << nombre_Usuario << endl;
-            cout << "Edificio: " << nombre_edificio << endl;
-            cout << "Nivel: " << nivel << endl;
-            cout << "Apartamento: " << apartamento << endl;
+            gotoxy(40,16);
+            cout << "DNI: " << propietario.DNI << endl;
+            gotoxy(40,17);
+            cout << "Usuario: " << propietario.nombre_Usuario << endl;
+            gotoxy(40,18);
+            cout << "Edificio: " << propietario.nombre_edificio << endl;
+            gotoxy(40,19);
+            cout << "Nivel: " << propietario.nivel << endl;
+            gotoxy(40,20);
+            cout << "Apartamento: " << propietario.apartamento << endl;
+            gotoxy(40,21);
             cout << "-----------------------" << endl;
 
+            gotoxy(40,25);
             cout << "Ingrese el DNI del nuevo propietario: ";
             cin >> DNI_aux;
+            gotoxy(40,26);
             cout << "Ingrese el nombre del nuevo propietario: ";
             cin >> nombre;
+            gotoxy(40,26);
             cout << "Ingrese el apellido del nuevo propietario: ";
             cin >> apellido;
 
             
             aux_nombre_Usuario = nombre + "_" + apellido;
-
+            propietario.DNI = DNI_aux;
+            propietario.nombre_Usuario = aux_nombre_Usuario;
             
-            num_apartamento = stoi(apartamento);
-            num_nivel = stoi(nivel);
-
-            
-            temporal << DNI_aux << ";" << aux_nombre_Usuario << ";" << contra << ";" << apartamento << ";" << nivel << ";" << nombre_edificio << endl;
+            nombre_edificio_aux = propietario.nombre_edificio;
+            num_apartamento = stoi(propietario.apartamento);
+            num_nivel = stoi(propietario.nivel);
+            gotoxy(40,27);
             cout << "Propietario modificado con éxito" << endl;
-        } else {
-            
-            temporal << DNI << ";" << nombre_Usuario << ";" << contra << ";" << apartamento << ";" << nivel << ";" << nombre_edificio << endl;
-        }
+        } 
+        
+        push(pila, propietario);
+
     }
-
     archivo.close();
-    temporal.close();
-
-    
-    remove("data/propietarios.txt");
-    rename("data/propietarios_temp.txt", "data/propietarios.txt");
 
     if (!encontrado) {
+        gotoxy(40,15);
         cout << "No se encontró un propietario con el DNI: " << DNI_buscar << endl;
+        remove("data/propietarios_temp.txt");
     } else {
-        
-        modificarArchivoPropietario(aux_nombre_Usuario, nombre_edificio, num_apartamento, num_nivel);
+        while(pila!=nullptr){
+            Propietario propietario_aux = pop(pila);
+            temporal << propietario_aux.DNI << ";" << propietario_aux.nombre_Usuario << ";" << propietario_aux.contraseña << ";" << propietario_aux.apartamento << ";" << propietario_aux.nivel << ";" << propietario_aux.nombre_edificio << endl;
+        }
+        temporal.close();
+        remove("data/propietarios.txt");
+        rename("data/propietarios_temp.txt", "data/propietarios.txt");
+        modificarArchivoPropietario(aux_nombre_Usuario, nombre_edificio_aux, num_apartamento, num_nivel);
     }
+}
+
+void buscarPropietario(){
+    ifstream archivo("data/propietarios.txt", ios::in);
+    string DNI, nombre_Usuario, contraseña, apartamento, nivel, nombre_edificio, DNI_buscar, linea;
+    bool busqueda = false;
+    if(!archivo.is_open()){
+        cout << "Fallo al abrir el archivo" << endl;
+        return;
+    }
+
+    system("cls");
+    printtitle();
+    gotoxy(40,13);
+    cout << "Ingrese el DNI del propietario que desea buscar: ";
+    cin >> DNI_buscar;
+    while (getline(archivo, linea)){
+        stringstream ss(linea);
+        getline(ss, DNI, ';');
+        getline(ss, nombre_Usuario, ';');
+        getline(ss, contraseña, ';');
+        getline(ss, apartamento, ';');
+        getline(ss, nivel, ';');
+        getline(ss, nombre_edificio, ';');
+
+        if(DNI == DNI_buscar){
+            busqueda = true;
+            gotoxy(40,14);
+            cout << "PERSONA ENCONTRADA" << endl;
+            gotoxy(40,15);
+            cout << "-----------------------" << endl;
+            gotoxy(40,16);
+            cout << "DNI: " << DNI << endl;
+            gotoxy(40,17);
+            cout << "Usuario: " << nombre_Usuario << endl;
+            gotoxy(40,18);
+            cout << "Edificio: " << nombre_edificio << endl;
+            gotoxy(40,19);
+            cout << "Nivel: " << nivel << endl;
+            gotoxy(40,20);
+            cout << "Apartamento: " << apartamento << endl;
+            gotoxy(40,21);
+            cout << "-----------------------" << endl;
+        }
+    }
+    if(!busqueda){
+        gotoxy(40,14);
+        cout << "No se ha encontrado un propietario con el DNI: " << DNI_buscar;
+    }
+    
+
+
 }
 
 void registrarPropietario() {
@@ -380,8 +481,10 @@ void menuAdministrador() {
         gotoxy(41,19);
         cout << "4. Modificar Propietarios";
         gotoxy(41,20);
-        cout << "5. Salir";
+        cout << "5. Buscar Propietario por DNI";
         gotoxy(41,21);
+        cout << "6. Salir";
+        gotoxy(41,22);
         cout << "Seleccione una opción: ";
         cin >> opcion;
 
@@ -400,6 +503,9 @@ void menuAdministrador() {
                 CambioPropietario();
                 break;
             case 5:
+                buscarPropietario();
+                break;
+            case 6:
                 break;
             default:
                 gotoxy(48,21);
@@ -407,5 +513,5 @@ void menuAdministrador() {
                 cin.get();
                 break;
         }
-    } while(opcion != 5);
+    } while(opcion != 6);
 }
