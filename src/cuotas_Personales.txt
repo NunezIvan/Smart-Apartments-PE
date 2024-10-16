@@ -1,4 +1,0 @@
-cuota;Enero;120;Edificio_1;2;4;true
-cuota;Enero;120;Edificio_1;1;4;true
-cuota;Enero;120;Edificio_1;3;2;true
-cuota;Enero;120;Edificio_1;2;1;true

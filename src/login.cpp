@@ -1,93 +1,36 @@
+#pragma once
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <limits>
 #include <sstream>
-#include "menuAdministrador.cpp" 
 #include "administrador.cpp" 
 #include "usuario_Apartamento.cpp" 
-#include "Cuotas.cpp"
-#include "ingresos.cpp"
-
+#include "menu.cpp"
+#include "menuAdministrador.cpp"
 using namespace std;
 
-extern EdificioLista edificios;
-
-void limpiarBuffer() {
-    cin.clear();
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-}
-
-void menuUsuario(string edificioNombre, string nivel_str, string nmro_apart_str){
-    int menu;
-    cuotas cuota;
-    listaCuota lista;
-
-    ifstream archivo("cuotas_Personales.txt", ios::in);
-    if(archivo.fail()){
-        cout<<"Error, no se pudo cargar el archivo, cerrando programa"<<endl;
-        exit(1);
-    }
-
-    string montostr;
-    string linea;
-    while(getline(archivo, linea)){
-
-        string nopagadostr;
-        stringstream ss(linea);
-        getline(ss,cuota.Cuota,';');
-        getline(ss,cuota.mes,';');
-        getline(ss,montostr,';');
-        getline(ss,cuota.edificio,';');
-        getline(ss,cuota.nivel,';');
-        getline(ss,cuota.apartamento,';');
-        getline(ss,nopagadostr,';');
-
-        cuota.monto= stof(montostr);
-
-        cuota.nopagado = (nopagadostr == "true");
-
-        lista.agregarFinal(cuota);
-    }
-    archivo.close();
-
-    do{
-    cout<<"1. Ver cuotas sin pagar"<<endl; 
-    cout<<"0. Salir"<<endl;
-    cin>>menu; 
-    switch(menu){
-        case 1: {
-            lista.verCuotasPersonales(edificioNombre,nivel_str,nmro_apart_str);
-            break;
-        }
-        case 0:{
-            cout<<"Adios"<<endl;
-            return;
-        }
-        default :{
-            cout<<"Entrada invalida"<<endl;
-        }
-    }
-
-    }while(menu<0 && menu>1); 
-}
-
 void inicio_SesionPropietario() {
+    printtitle();
     int dni_ingresado;  
     string nombre_ingresado, contrasena_ingresada;
-
-    cout << "Inicio de Sesión - Propietario" << endl;
+    gotoxy(33,14);
+    cout <<"▂▃▄▅▆▇█▓▒░INICIO DE SESION - PROPIETARIO░▒▓█▇▆▅▄▃▂" << endl;
+    gotoxy(44,16);
     cout << "Ingrese su DNI: ";  
     cin >> dni_ingresado;
     limpiarBuffer();
+    gotoxy(44,17);
     cout << "Ingrese su nombre de usuario: ";
     getline(cin, nombre_ingresado);
+    gotoxy(44,18);
     cout << "Ingrese su contraseña: ";
     getline(cin, contrasena_ingresada);
 
-    ifstream archivo("propietarios.txt");
+    ifstream archivo("data/propietarios.txt");
     if (!archivo.is_open()) {
-        cout << "Error al abrir el archivo de propietarios." << endl;
+        gotoxy(44,19);
+        cout << "Error al abrir el archivo de propietarios.";
         return;
     }
 
@@ -108,36 +51,49 @@ void inicio_SesionPropietario() {
         dni_archivo = stoi(dni_str);
 
         if (dni_archivo == dni_ingresado && nombre_archivo == nombre_ingresado && contrasena_archivo == contrasena_ingresada) {
-            cout << "Bienvenido, " << nombre_ingresado << "! Has iniciado sesión como Propietario." << endl;
-            cout << "Edificio: " << edificioNombre << ", Nivel: " << nivel_str << ", Apartamento: " << nmro_apart_str << endl;
+            printtitle();
+            gotoxy(33,14);
+            cout << "Bienvenido, " << nombre_ingresado << "! Has iniciado sesión como Propietario.";
+            gotoxy(33,15);
+            cout << "Edificio: " << edificioNombre << ", Nivel: " << nivel_str << ", Apartamento: " << nmro_apart_str;
+            gotoxy(48,17);
+            cout<<"Presione una tecla para continuar.........";
+            cin.get();
             encontrado = true;
-            menuUsuario(edificioNombre,nivel_str,nmro_apart_str);
             break;
         }
     }
 
     if (!encontrado) {
-        cout << "Error: DNI, nombre de usuario o contraseña incorrectos." << endl;
+        gotoxy(40,19);
+        cout << "Error: DNI, nombre de usuario o contraseña incorrectos.";
+        cin.get();
+        system("cls");
     }
 
     archivo.close();
 }
 
 void inicio_SesionAdministrador() {
+    printtitle();
     int dni_ingresado;  
     string nombre_ingresado, contrasena_ingresada;
-
-    cout << "Inicio de Sesión - Administrador" << endl;
+    gotoxy(35,14);
+    cout <<"▂▃▄▅▆▇█▓▒░INICIO DE SESION - ADMINISTRADOR░▒▓█▇▆▅▄▃▂" << endl;
+    gotoxy(44,16);
     cout << "Ingrese su DNI: "; 
     cin >> dni_ingresado;
     limpiarBuffer();
+    gotoxy(44,17);
     cout << "Ingrese su nombre de usuario: ";
     getline(cin, nombre_ingresado);
+    gotoxy(44,18);
     cout << "Ingrese su contraseña: ";
     getline(cin, contrasena_ingresada);
 
-    ifstream archivo("administradores.txt");
+    ifstream archivo("data/administradores.txt");
     if (!archivo.is_open()) {
+        gotoxy(44,19);
         cout << "Error al abrir el archivo de administradores." << endl;
         return;
     }
@@ -153,49 +109,54 @@ void inicio_SesionAdministrador() {
         getline(ss, contrasena_archivo, ';');
 
         int dni_archivo;
-        try {
-            dni_archivo = stoi(dni_str);
-        }
-        catch (const invalid_argument& e) {
-            cout << "DNI inválido en la línea: " << linea << endl;
-            continue;
-        }
-        catch (const out_of_range& e) {
-            cout << "DNI fuera de rango en la línea: " << linea << endl;
-            continue;
-        }
+        dni_archivo = stoi(dni_str);
+
 
         if (dni_archivo == dni_ingresado && nombre_archivo == nombre_ingresado && contrasena_archivo == contrasena_ingresada) {
-            cout << "Bienvenido, " << nombre_ingresado << "! Has iniciado sesión como Administrador." << endl;
+            printtitle();
+            gotoxy(33,14);
+            cout << "Bienvenido, " << nombre_ingresado << "! Has iniciado sesión como Administrador.";
+            gotoxy(33,16);
+            cout<<"Presione una tecla para continuar..............";
+            cin.get();
+            menuAdministrador(nombre_ingresado);
             encontrado = true;
-            menuAdministrador(); 
             break;
         }
     }
 
     if (!encontrado) {
-        cout << "Error: DNI, nombre de usuario o contraseña incorrectos." << endl;
+        gotoxy(40,19);
+        cout << "Error: DNI, nombre de usuario o contraseña incorrectos.";
+        cin.get();
+        system("cls");
     }
 
     archivo.close();
 }
 
 void inicio_SesionMantenimiento() {
+    printtitle();
     int dni_ingresado;
     string nombre_ingresado, contrasena_ingresada;
-
-    cout << "Inicio de Sesión - Mantenimiento" << endl;
+    gotoxy(35,14);
+    cout <<"▂▃▄▅▆▇█▓▒░INICIO DE SESION - MANTENIMIENTO░▒▓█▇▆▅▄▃▂" << endl;
+    gotoxy(44,16);
     cout << "Ingrese su DNI: "; 
     cin >> dni_ingresado;
     limpiarBuffer();
+    gotoxy(44,17);
     cout << "Ingrese su nombre de usuario: ";
     getline(cin, nombre_ingresado);
+    gotoxy(44,18);
     cout << "Ingrese su contraseña: ";
     getline(cin, contrasena_ingresada);
 
-    ifstream archivo("mantenimiento.txt");
+    ifstream archivo("data/mantenimiento.txt");
     if (!archivo.is_open()) {
+        gotoxy(44,19);
         cout << "Error al abrir el archivo de mantenimiento." << endl;
+        cin.get();
         return;
     }
 
@@ -210,41 +171,44 @@ void inicio_SesionMantenimiento() {
         getline(ss, contrasena_archivo, ';');
 
         int dni_archivo;
-        try {
-            dni_archivo = stoi(dni_str);
-        }
-        catch (const invalid_argument& e) {
-            cout << "DNI inválido en la línea: " << linea << endl;
-            continue;
-        }
-        catch (const out_of_range& e) {
-            cout << "DNI fuera de rango en la línea: " << linea << endl;
-            continue;
-        }
+        dni_archivo = stoi(dni_str);
 
         if (dni_archivo == dni_ingresado && nombre_archivo == nombre_ingresado && contrasena_archivo == contrasena_ingresada) {
+            printtitle();
+            gotoxy(33,14);
             cout << "Bienvenido, " << nombre_ingresado << "! Has iniciado sesión como Personal de Mantenimiento." << endl;
+            gotoxy(33,16);
+            cout<<"Presione una tecla para continuar......";
+            cin.get();
             encontrado = true;
             break;
         }
     }
 
     if (!encontrado) {
-        cout << "Error: DNI, nombre de usuario o contraseña incorrectos." << endl;
+        gotoxy(40,19);
+        cout << "Error: DNI, nombre de usuario o contraseña incorrectos.";
+        cin.get();
+        system("cls");
     }
 
     archivo.close();
 }
 
 void inicio_Sesion() {
+    printtitle();
     int opcion;
     cin.ignore();
-    system("cls");
-    cout << "Seleccione el tipo de usuario para iniciar sesión:" << endl;
-    cout << "1. Propietario" << endl;
-    cout << "2. Administrador" << endl;
-    cout << "3. Mantenimiento" << endl;
-    cout << "Ingrese su opción: ";
+    gotoxy(40,14);
+    cout <<"▂▃▄▅▆▇█▓▒░TIPO DE USUARIO░▒▓█▇▆▅▄▃▂" << endl;
+    gotoxy(48,16);
+    cout << "1. Propietario";
+    gotoxy(48,17);
+    cout << "2. Administrador";
+    gotoxy(48,18);
+    cout << "3. Mantenimiento";
+    gotoxy(35,19);
+    cout << "Seleccione el tipo de usuario para iniciar sesión: ";
     cin >> opcion;
     limpiarBuffer();  
 

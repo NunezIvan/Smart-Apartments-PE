@@ -1,1 +1,0 @@
-Cuota;Edificio_1;Enero;600;5

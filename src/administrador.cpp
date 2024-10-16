@@ -16,9 +16,9 @@ public:
         apellido = _apellido;
         generarNombreUsuario(); 
         generarContrasena(); 
-
+    
         // Guardar los datos del administrador en un archivo
-        ofstream file("administradores.txt", ios::app);
+        ofstream file("data/administradores.txt", ios::app);
         if (file.is_open()) {
             file << getDNI_Usuario() << ";" << getNom_Usuario() << ";" << getContr_Usuario() << "\n";
             file.close();

@@ -1,4 +1,0 @@
-Limpieza;Maria;15;Enero;en BCP;40;Edificio_1
-Pago Seguridad;Enero;por Yape;45;Edificio_1
-Limpieza;Aaron;12;Enero;en BCP;15;Edificio_1
-Pago Administradores;Enero;por Yape;500;Edificio_1
