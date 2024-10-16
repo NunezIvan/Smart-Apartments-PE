@@ -1,0 +1,3 @@
+Mante. Pintura;Enero;Transferencia Bancaria;50;Edificio_1
+Pago Agua;Enero;por Yape;-31.3172;Edificio_1
+Pago Agua;Enero;por Yape;1168.51;Edificio_1

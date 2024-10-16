@@ -1,0 +1,2 @@
+cuota;Enero;593.596;Edificio_1;2;1;true
+cuota;Enero;593.596;Edificio_1;1;1;true
