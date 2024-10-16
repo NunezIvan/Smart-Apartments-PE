@@ -67,28 +67,28 @@ void pagoCuota(string _mes, string edificio){
             cout << " 0.- Salir" << endl;
             cout << " Elija una opcion: ";
 
-            cin >> menu; 
+            cin >> menu;
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
             switch (menu) {
                 case 1: {
-                    tipo = "TRANSFERENCIA BANCARIA";
+                    tipo = "Transferencia Bancaria";
                     break;
                 }
                 case 2: {
-                    tipo = "PAGO POR YAPE";
+                    tipo = "por Yape";
                     break;
                 }
                 case 3: {
-                    tipo = "PAGO POR EFECTIVO";
+                    tipo = "en Efectivo";
                     break;
                 }
                 case 4: {
-                    tipo = "DEPOSITO POR BCP"; 
+                    tipo = "en BCP";
                     break;
                 }
                 case 5: {
-                    tipo = "VIA WEB"; 
+                    tipo = "Via Web";
                     break;
                 }
                 case 0: {

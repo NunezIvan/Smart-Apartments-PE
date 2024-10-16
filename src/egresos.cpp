@@ -6,6 +6,7 @@
 #include <iomanip>
 #include "Cuotas.cpp"
 #include "ingresos.cpp"
+#include "contingencias.cpp"
 
 using namespace std;
 
@@ -608,7 +609,7 @@ void menuControlDeCaja(const string& mes, const string& edificio){ // Ponerlo en
       cout<<" 6.- VER CUOTAS UNICAS"<<endl;
       cout<<" 7.- REGISTRO DE INGRESOS"<<endl;
       cout<<" 8.- VER INGRESOS"<<endl;
-      cout<<" 9.- VER BALANCE"<<endl;
+      cout<<" 9.- VER FONDO DE CONTIGENCIA"<<endl;
       cout << " 0.- Salir" << endl;
       cout << " Elija una opcion: ";
       cin >> r;
@@ -654,9 +655,18 @@ void menuControlDeCaja(const string& mes, const string& edificio){ // Ponerlo en
             system("CLS");
             mostrarIngresos();
             break;
-         default:
+         case '9':{
+            system("CLS");
+            Nodo* pila = NULL;
+            calcularContingencias(temp_mes, temp_edificio);
+            agregar(pila);
+            mostrarPilaSinModificar(pila, temp_mes, temp_edificio);
+            break;
+         }
+         default:{
             cout << "Opcion invalida. Intente nuevamente." << endl;
             break;
+         }
       }
       cout<<endl;
    system("CLS");

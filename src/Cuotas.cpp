@@ -8,10 +8,10 @@
 using namespace std;
 
 struct cuotas {
-    string Cuota; 
+    string Cuota;
     string mes;
     float monto;
-    string edificio; 
+    string edificio;
     string nivel;
     string apartamento;
     bool nopagado;
@@ -21,11 +21,11 @@ struct nodoCuota {
     cuotas data;
     nodoCuota* siguiente;
 
-    nodoCuota(const cuotas& datos) : data(datos), siguiente(nullptr) {} 
+    nodoCuota(const cuotas& datos) : data(datos), siguiente(nullptr) {}
 };
 
 class listaCuota {
-    private: 
+    private:
         nodoCuota* cabeza;
 
     public:
@@ -63,22 +63,25 @@ void listaCuota::agregarFinal(cuotas data) {
 }
 
 void listaCuota::guardadoArchivo(const string& nombreArchivo) {
-    ofstream archivo(nombreArchivo);
+   ofstream archivo(nombreArchivo);
 
-    if (archivo.fail()) {
+
+    if (archivo.fail() || archivo1.fail()) {
         cout << "Error, no se pudo cargar el archivo, cerrando programa" << endl;
         exit(1);
     }
 
     nodoCuota* temp = cabeza;
     while (temp != nullptr) {
-        archivo << temp->data.Cuota << ';' << temp->data.mes << ';' << temp->data.monto << ';' 
-                << temp->data.edificio << ';' << temp->data.nivel << ';' 
+        archivo << temp->data.Cuota << ';' << temp->data.mes << ';' << temp->data.monto << ';'
+                << temp->data.edificio << ';' << temp->data.nivel << ';'
                 << temp->data.apartamento << ';' << (temp->data.nopagado ? "true" : "false") << endl;
+
         temp = temp->siguiente;
     }
 
     archivo.close();
+    archivo1.close();
 }
 
 void listaCuota::mostrarCuotas() {
@@ -90,8 +93,8 @@ void listaCuota::mostrarCuotas() {
     nodoCuota* temp = cabeza;
     cout << "Lista de cuotas" << endl;
     while (temp != nullptr) {
-        cout << temp->data.Cuota << " , " << temp->data.mes << " , " << temp->data.monto << " , " 
-             << temp->data.edificio << " , " << temp->data.nivel << " , " << temp->data.apartamento 
+        cout << temp->data.Cuota << " , " << temp->data.mes << " , " << temp->data.monto << " , "
+             << temp->data.edificio << " , " << temp->data.nivel << " , " << temp->data.apartamento
              << " , " << (temp->data.nopagado ? "Si" : "No ") << endl;
         temp = temp->siguiente;
     }
@@ -105,13 +108,13 @@ void listaCuota::verCuotasPersonales(string& edificio, string& nivel, string& ap
         return;
     }
 
-    nodoCuota* temp = cabeza; 
+    nodoCuota* temp = cabeza;
     while (temp != nullptr) {
         if (temp->data.edificio == edificio && temp->data.nivel == nivel && temp->data.apartamento == apartamento && temp->data.nopagado == true) {
             cout << temp->data.Cuota << endl;
             cout << temp->data.mes << endl;
             cout << temp->data.monto << endl;
-            cout << "----------------------" << endl; 
+            cout << "----------------------" << endl;
         }
         temp = temp->siguiente;
     }
@@ -145,19 +148,19 @@ void listaCuota::compararCuotas(string& _mes, string& edificio, string& nivel, s
 void listaCuota::mostrarCuotasNoPagadas() {
     if (cabeza == nullptr) {
         cout << "No hay cuotas disponibles" << endl;
-        return; 
+        return;
     }
 
-    nodoCuota* temp = cabeza; 
-    bool hayCuotasnoPagadas = false; 
+    nodoCuota* temp = cabeza;
+    bool hayCuotasnoPagadas = false;
 
     cout << "Lista de cuotas a pagar: " << endl;
     while (temp != nullptr) {
         if (temp->data.nopagado) {
-            cout << temp->data.Cuota << " , " << temp->data.mes << " , " << temp->data.monto << " , " 
-                 << temp->data.edificio << " , " << temp->data.nivel << " , " << temp->data.apartamento 
+            cout << temp->data.Cuota << " , " << temp->data.mes << " , " << temp->data.monto << " , "
+                 << temp->data.edificio << " , " << temp->data.nivel << " , " << temp->data.apartamento
                  << " , " << "Si" << endl;
-            hayCuotasnoPagadas = true; 
+            hayCuotasnoPagadas = true;
         }
         temp = temp->siguiente;
     }
@@ -174,11 +177,11 @@ listaCuota::~listaCuota() {
         temp = cabeza;
         cabeza = cabeza->siguiente;
         delete temp;
-    } 
+    }
 }
 
 void calcularCuotaGeneral(string mes, string edificio) {
-    int cantidadPersonas; 
+    int cantidadPersonas;
     float monto;
     ofstream archivo("Cuota_General.txt", ios::app);
 
@@ -200,7 +203,7 @@ void calcularCuotaGeneral(string mes, string edificio) {
 
 void calcularCuotaEspecifica(string& _mes, string& _edificios, int& _cantidadPersonas, float& _montoGen) {
     listaCuota lista;
-    float montoRepartido = _montoGen / _cantidadPersonas; 
+    float montoRepartido = _montoGen / _cantidadPersonas;
     cuotas cuota;
     ifstream archivo("propietarios.txt", ios::in);
     if (archivo.fail()) {
