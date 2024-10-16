@@ -4,7 +4,7 @@
 #include <string>
 #include "infraestructura.cpp" 
 #include "usuario_Apartamento.cpp"
-#include "egresos.cpp"
+#include "control_Caja.cpp"
 #include "menu.cpp"
 
 using namespace std;
